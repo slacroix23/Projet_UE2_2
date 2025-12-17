@@ -1,0 +1,22 @@
+/* --- Styles du Bandeau --- */
+.casino-header {
+    display: flex;
+    justify-content: center; /* Centre le texte horizontalement */
+    align-items: center;     /* Centre le texte verticalement */
+    height: 100px;           /* Hauteur du bandeau */
+    background-color: #121212; /* Noir mat profond */
+    border-bottom: 4px solid #d4af37; /* Ligne dorée en bas */
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.7);
+    font-family: 'Arial Black', Gadget, sans-serif;
+}
+
+/* --- Style du Texte de Bienvenue --- */
+.bandeau {
+    color: #d4af37;          /* Couleur or */
+    font-size: 2rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 5px;     /* Espacement des lettres pour le style */
+    text-align: center;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Ombre pour la lisibilité */
+}
