@@ -1,9 +1,3 @@
-fastapi
-uvicorn
 sqlalchemy
-pydantic
-bcrypt
-python-jose
-httpx
-streamlit
-pyinstaller
+flask
+requests
