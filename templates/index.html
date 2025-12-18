@@ -4,8 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!--<link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">-->
-    <link rel="stylesheet" href="../static/index.css">
+    <!-- Utilise url_for pour charger ton CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
     <title>Casino</title>
 </head>
 
@@ -15,7 +15,9 @@
             <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" />
         </div>
         <div class="bandeau">Bienvenue sur notre Casino</div>
+        <button onclick="toggleLoginForm()">Log in</button>
     </header>
+
     <ul>
         <!--integration de python (temporaire)-->
         {% for user in users %}
@@ -23,21 +25,36 @@
         {% endfor %}
     </ul>
 
-    <form action="/login" method="POST">
-        <label for="username">Username :</label>
-        <input type="text" id="username" name="username" required autocomplete="username">
-        <br>
+    <!-- Formulaire caché par défaut -->
+    <div id="login-form" class="login-form" style="display: none;">
+        <form action="/login" method="POST">
+            <label for="username">Username :</label>
+            <input type="text" id="username" name="username" required autocomplete="username">
+            <br>
 
-        <label for="password">Mot de passe :</label>
-        <input type="password" id="password" name="password" required autocomplete="current-password">
-        <br>
+            <label for="password">Mot de passe :</label>
+            <input type="password" id="password" name="password" required autocomplete="current-password">
+            <br>
 
-        <button type="submit">Valider</button>
-        </div>
-        <footer>
-            <p>text exemple v2</p>
-        </footer>
+            <button type="submit">Valider</button>
+        </form>
+    </div>
 
+    <footer>
+        <p>text exemple v2</p>
+    </footer>
+
+    <!-- Script pour afficher/masquer le formulaire -->
+    <script>
+        function toggleLoginForm() {
+            const form = document.getElementById("login-form");
+            if (form.style.display === "none") {
+                form.style.display = "block";
+            } else {
+                form.style.display = "none";
+            }
+        }
+    </script>
 </body>
 
 </html>
