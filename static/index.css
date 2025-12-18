@@ -52,20 +52,68 @@ footer{
     letter-spacing: 3px;
 }
 
-.login-button {
-    position: absolute;
-    top: 20px;
-    right: 30px;
+/* Bouton Log in façon casino */
+.login-button button {
+    background: linear-gradient(45deg, #d4af37, #ffcc00);
+    color: #121212;
+    font-weight: bold;
+    font-size: 1rem;
+    padding: 10px 20px;
+    border: 2px solid #d4af37;
+    border-radius: 8px;
+    box-shadow: 0 0 10px #d4af37;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
+.login-button button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 15px #ffd700;
+}
+
+/* Formulaire pop-up casino */
 .login-form {
     position: absolute;
-    top: 60px;
+    top: 160px; /* juste en dessous du header */
     right: 30px;
-    background-color: rgba(0,0,0,0.8);
-    padding: 15px;
+    width: 300px;
+    background-color: rgba(0, 0, 0, 0.85); /* fond transparent */
+    padding: 20px;
     border: 2px solid #d4af37;
-    border-radius: 10px;
+    border-radius: 12px;
     color: #ffd700;
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+    z-index: 1000;
 }
+
+.login-form label {
+    display: block;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+.login-form input {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    background-color: #333;
+    color: #fff;
+    border: 1px solid #d4af37;
+    border-radius: 5px;
+}
+
+.login-form button {
+    margin-top: 15px;
+    width: 100%;
+    padding: 10px;
+    background: linear-gradient(45deg, #ff0000, #cc0000);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    box-shadow: 0 0 10px #ff0000;
+    cursor: pointer;
+}
+
+
 
