@@ -20,14 +20,5 @@ def home():
     #envoi vers index.html
     return render_template("index.html", users = users)
 
-#@app.route("/api/balance")
-#def get_balance():
- #   conn = sqlite3.connect("casino.db")
-  #  cursor = conn.cursor()
-   # cursor.execute("SELECT balance FROM users WHERE id = 1")  # exemple
-    #balance = cursor.fetchone()[0]
-    #conn.close()
-    #return jsonify({"balance": balance})
-
 if __name__ == "__main__":
     app.run(debug=True)

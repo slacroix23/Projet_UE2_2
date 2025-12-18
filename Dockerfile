@@ -1,8 +1,11 @@
 FROM python:3.14.2-slim
 
-WORKDIR /app
-COPY . /app
+WORKDIR /Projet-UE2-3
+
+COPY . .
+
 RUN pip install --no-cache-dir -r requirements.txt
 
-EXPOSE 8000
-CMD ["python", "main.py"]
+EXPOSE 5000
+
+CMD ["python", "app.py"]
