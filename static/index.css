@@ -1,0 +1,4 @@
+.logo img {
+    height: 50px; /* ou 40px si tu veux encore plus petit */
+    width: auto;
+}
