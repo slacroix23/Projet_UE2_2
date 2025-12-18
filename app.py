@@ -27,6 +27,10 @@ def login():
     # logique de login ici
     return redirect(url_for("games"))
 
+@app.route("/games")
+def games():
+    return render_template("games.html")
+
 
 if __name__ == "__main__":
     app.run(debug=True)
