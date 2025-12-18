@@ -1,6 +1,28 @@
-body {
-    margin: 0;
-    background-color: #ffffff; /* Fond sombre pour le reste de la page */
+
+body{
+    background-color: #500303;
+    display:flex;
+    flex-direction: column;
+}
+footer{
+    border: 2px solid;
+    border-radius: 20px;
+    color: rgb(238, 207, 31);
+    box-shadow: 0 1px 5px rgb(238, 207, 31);
+    margin: 20px;
+    padding: 5px;
+}
+.container {
+    align-self: center;
+    justify-content: space-around;
+    text-align: center;
+    color: rgb(238, 207, 31);
+    border: 2px solid;
+    border-radius: 20px;
+    box-shadow: 0 3px 10px rgb(238, 207, 31);
+    margin: 20px;
+    padding: 20px;
+    width: fit-content;
 }
 
 .casino-header {
