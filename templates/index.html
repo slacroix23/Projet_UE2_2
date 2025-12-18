@@ -1,15 +1,21 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Index</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
+    <title>Casino</title>
 </head>
+
 <body>
+    <header class="casino-header">
+        <div class="bandeau">Bienvenue sur notre Casino</div>
+    </header>
     <ul>
         <!--integration de python (temporaire)-->
         {% for user in users %}
-            <li>{{ user["username"] }}</li>
+        <li>{{ user["username"] }}</li>
         {% endfor %}
     </ul>
     <div>
@@ -23,10 +29,11 @@
             <br>
             <button type="submit">Valider</button>
         </form>
-    </div> 
+    </div>
     <footer>
         <p>text exemple v2</p>
     </footer>
 
 </body>
+
 </html>
