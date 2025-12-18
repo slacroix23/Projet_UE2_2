@@ -4,12 +4,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
+    <!--<link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">-->
+    <link rel="stylesheet" href="../static/index.css">
     <title>Casino</title>
 </head>
 
 <body>
     <header class="casino-header">
+        <div class="logo">
+            <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" />
+        </div>
         <div class="bandeau">Bienvenue sur notre Casino</div>
     </header>
     <ul>
@@ -18,10 +22,8 @@
         <li>{{ user["username"] }}</li>
         {% endfor %}
     </ul>
-    <div class="logo">
-            <img src="/static/logo.png" alt="Logo" />
-    </div>
-        <form action="/login" method="POST">
+
+    <form action="/login" method="POST">
         <label for="username">Username :</label>
         <input type="text" id="username" name="username" required autocomplete="username">
         <br>
@@ -31,10 +33,10 @@
         <br>
 
         <button type="submit">Valider</button>
-    </div> 
-    <footer>
-        <p>text exemple v2</p>
-    </footer>
+        </div>
+        <footer>
+            <p>text exemple v2</p>
+        </footer>
 
 </body>
 
