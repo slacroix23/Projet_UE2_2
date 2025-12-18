@@ -3,26 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/index.css">
     <title>Index</title>
 </head>
 <body>
-    <ul>
+    <ul class = "container">
         <!--integration de python (temporaire)-->
         {% for user in users %}
             <li>{{ user["username"] }}</li>
         {% endfor %}
     </ul>
-    <div>
+    <div class = "container">
         <h1>formulaire de connexion</h1>
         <form action="" method="POST">
             <label for="username">Username : </label>
             <input type="text" required>
-            <br>
+            <br><br>
             <label for="mdp">Mot de passe : </label>
             <input type="text" required>
-            <br>
+            <br><br>
             <button type="submit">Valider</button>
         </form>
+        <br>
     </div> 
     <footer>
         <p>text exemple v2</p>
