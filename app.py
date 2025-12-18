@@ -1,4 +1,4 @@
-from flask import Flask, render_template, jsonify
+from flask import Flask, render_template, request, redirect, url_for, session
 import sqlite3
 
 DATABASE = 'casino_v2.db'
@@ -19,6 +19,14 @@ def home():
     connexion.close()
     #envoi vers index.html
     return render_template("index.html", users = users)
+
+@app.route("/login", methods=["POST"])
+def login():
+    username = request.form["username"]
+    password = request.form["password"]
+    # logique de login ici
+    return redirect(url_for("games"))
+
 
 if __name__ == "__main__":
     app.run(debug=True)
