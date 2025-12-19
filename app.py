@@ -1,4 +1,4 @@
-"""Module principal de l'application Casino."""
+"""Module principal de l'application Casino Flask."""
 import sqlite3
 from flask import Flask, render_template, request, redirect, url_for
 
@@ -21,28 +21,25 @@ def home():
 
 @app.route("/login", methods=["POST"])
 def login():
-    """Gère la connexion des utilisateurs."""
-    # On utilise request.form pour éviter l'alerte 'unused-variable'
-    if request.form.get("username"):
-        return redirect(url_for("choix"))
-    return redirect(url_for("home"))
+    """Gère la redirection du login."""
+    return redirect(url_for("choix"))
 
 @app.route("/choix")
 def choix():
-    """Affiche la page de choix du jeu."""
+    """Affiche la page de sélection du jeu."""
     return render_template("choix.html")
 
 @app.route('/jouer-au-blackjack')
 def blackjack():
-    """Affiche la page de blackjack."""
+    """Affiche la table de Blackjack."""
     return render_template('blackjack.html')
 
 @app.route('/jouer-a-la-roulette', methods=['GET', 'POST'])
 def roulette():
-    """Gère la logique de la roulette."""
+    """Gère la roulette."""
     if request.method == 'POST':
         amount = request.form.get('amount')
-        print(f"Mise : {amount}")  # Utilisation de la variable
+        print(f"Mise enregistrée : {amount}")
     return render_template('roulette.html')
 
 if __name__ == "__main__":
