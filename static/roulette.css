@@ -1,0 +1,39 @@
+body{
+    background-color: #500303;
+    display:flex;
+    flex-direction: column;
+}
+footer{
+    border: 2px solid;
+    border-radius: 20px;
+    color: rgb(238, 207, 31);
+    box-shadow: 0 1px 5px rgb(238, 207, 31);
+    margin: 20px;
+    padding: 5px;
+}
+
+.casino-header {
+    display: flex;
+    justify-content: space-between; /* logo à gauche, texte centré */
+    align-items: center;
+    height: 150px;
+    background-color: #121212;
+    border-bottom: 4px solid #d4af37; /* Ligne dorée */
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+    position: relative; /* permet de centrer le texte indépendamment */
+    padding: 0 30px;
+}
+
+.logo img {
+    height: 160px;   /* ajuste la taille */
+}
+
+.bandeau {
+    position: absolute; /* détache du flux flex */
+    left: 50%;
+    transform: translateX(-50%); /* centre horizontalement */
+    color: #d4af37;
+    font-family: 'Arial Black', sans-serif;
+    font-size: 2.5rem;
+    text-transform: uppercase;
+}
