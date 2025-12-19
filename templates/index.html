@@ -14,27 +14,55 @@
             <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" />
         </div>
         <div class="bandeau">Bienvenue sur notre Casino</div>
-        <div class="login-button">
-            <button id="login-toggle" onclick="toggleLoginForm()">Log in</button>
+         <div class="login-buttons">
+        <button id="login-btn" onclick="toggleLoginForm()">Log in</button>
+        <button id="register-btn" onclick="toggleRegisterForm()">Register</button>
         </div>
     </header>
 
-    <ul>
-        <!--integration de python (temporaire)-->
-        {% for user in users %}
-        <li>{{ user["username"] }}</li>
-        {% endfor %}
-    </ul>
 
-    <!-- Formulaire caché par défaut -->
-<div id="login-form" class="login-form" style="display: none;">
+<!-- Formulaire Log in -->
+<div id="login-form" class="form-popup" style="display: none;">
     <form action="/login" method="POST">
         <label for="username">Username :</label>
-        <input type="text" id="username" name="username" required autocomplete="username">
+        <input type="text" id="username" name="username" required>
+
         <label for="password">Mot de passe :</label>
-        <input type="password" id="password" name="password" required autocomplete="current-password">
-        <button type="submit">Valider</button>
+        <input type="password" id="password" name="password" required>
+
+        <button type="submit" class="login-submit">Valider</button>
     </form>
+</div>
+
+<!-- Formulaire Register -->
+<div id="register-form" class="form-popup register-style" style="display: none;">
+    <form action="/register" method="POST">
+        <label for="new-username">Nom d'utilisateur :</label>
+        <input type="text" id="new-username" name="username" required>
+
+        <label for="new-password">Mot de passe :</label>
+        <input type="password" id="new-password" name="password" required>
+
+        <label for="confirm-password">Confirmer le mot de passe :</label>
+        <input type="password" id="confirm-password" name="confirm_password" required>
+
+        <button type="submit" class="register-submit">S'inscrire</button>
+    </form>
+</div>
+
+<div class="promo-banner">
+    🎁 Bonus de bienvenue : 500 jetons offerts à l'inscription !
+</div>
+
+<div class="intro-texte">
+    Chez <strong>Trust the Roll</strong>, nous avons une vision simple : offrir une expérience de jeu en ligne aussi raffinée qu'un palace, aussi fluide qu'un croupier professionnel, et aussi mémorable qu'un jackpot.  
+    Nos technologies sont certifiées, nos jeux sont calibrés, et notre plateforme est conçue pour accueillir aussi bien les joueurs exigeants que ceux qui ne savent toujours pas comment fonctionne le blackjack.<br><br>
+
+    Ici, tout est pensé pour votre confort : sécurité renforcée, bonus généreux, interface élégante…  
+    Nous avons même demandé à nos statisticiens d'améliorer vos chances de gagner, ils ont refusé, mais l'intention y était.<br><br>
+
+    Rejoignez une communauté de passionnés, de stratèges, de curieux, et de quelques individus qui ont cliqué “Accepter les cookies” un peu trop vite.  
+    <strong>Trust the Roll</strong> : l'endroit où l'on vient pour rêver grand… et où l'on repart avec des histoires qu'on ne racontera pas à son banquier.
 </div>
 
 <section class="casino-characters">
@@ -58,13 +86,80 @@
 
 
     <!-- Script pour afficher/masquer le formulaire -->
-    <script>
+<script>
 function toggleLoginForm() {
     const form = document.getElementById("login-form");
-    form.style.display = (form.style.display === "none") ? "flex" : "none";
+    const isVisible = form.style.display === "block";
+
+    // Toggle visibility
+    form.style.display = isVisible ? "none" : "block";
+
+    // Si on ouvre le login, on ferme le register
+    if (!isVisible) {
+        document.getElementById("register-form").style.display = "none";
+    }
+}
+
+function toggleRegisterForm() {
+    const form = document.getElementById("register-form");
+    const isVisible = form.style.display === "block";
+
+    form.style.display = isVisible ? "none" : "block";
+
+    if (!isVisible) {
+        document.getElementById("login-form").style.display = "none";
+    }
 }
 </script>
 
+<script>
+window.addEventListener("DOMContentLoaded", () => {
+    const canvas = document.getElementById("particles");
+    const ctx = canvas.getContext("2d");
+
+    function resize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+    resize();
+    window.addEventListener("resize", resize);
+
+    const particles = [];
+    for (let i = 0; i < 80; i++) {
+        particles.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            size: Math.random() * 2 + 1,
+            speed: Math.random() * 0.3 + 0.1,
+            alpha: Math.random() * 0.5 + 0.3
+        });
+    }
+
+    function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        particles.forEach(p => {
+            ctx.fillStyle = `rgba(255, 215, 100, ${p.alpha})`;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+            ctx.fill();
+
+            p.y -= p.speed;
+            if (p.y < -5) {
+                p.y = canvas.height + 5;
+                p.x = Math.random() * canvas.width;
+            }
+        });
+
+        requestAnimationFrame(animate);
+    }
+    animate();
+});
+</script>
+
+
+
+<canvas id="particles"></canvas>
 </body>
 
 </html>

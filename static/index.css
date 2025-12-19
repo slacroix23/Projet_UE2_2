@@ -1,9 +1,115 @@
-
-body{
-    background-color: #500303;
-    display:flex;
-    flex-direction: column;
+body {
+    margin: 0;
+    background: radial-gradient(
+        circle at center,
+        #6b0000 0%,     /* rouge plus lumineux, effet velours éclairé */
+        #4a0000 30%,    /* rouge profond premium */
+        #240000 65%,    /* rouge noirci pour la profondeur */
+        #000000 100%    /* noir total pour le contraste */
+    );
+    animation: pulseBg 10s ease-in-out infinite;
+    overflow-x: hidden;
 }
+
+@keyframes pulseBg {
+    0%   { background-size: 100%; }
+    50%  { background-size: 108%; }
+    100% { background-size: 100%; }
+}
+
+/* Fumée rouge animée */
+body::after {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 200%;
+    height: 200%;
+    pointer-events: none;
+    z-index: -1;
+
+    background: radial-gradient(circle, rgba(255,0,0,0.15) 0%, rgba(0,0,0,0) 60%);
+    filter: blur(120px);
+    opacity: 0.6;
+
+    animation: smokeMove 18s ease-in-out infinite;
+}
+
+@keyframes logoGlow {
+    0%, 100% { opacity: 0.55; transform: translate(-50%, -50%) scale(1); }
+    50%      { opacity: 0.95; transform: translate(-50%, -50%) scale(1.15); }
+}
+
+
+@keyframes smokeMove {
+    0%   { transform: translate(-20%, -20%) scale(1); }
+    50%  { transform: translate(10%, 10%) scale(1.2); }
+    100% { transform: translate(-20%, -20%) scale(1); }
+}
+
+
+@keyframes pulseBg {
+    0%   { background-size: 100%; }
+    50%  { background-size: 108%; } /* effet respiration plus subtil */
+    100% { background-size: 100%; }
+}
+
+
+.cta-button {
+    background: linear-gradient(45deg, #ff0000, #cc0000);
+    color: white;
+    font-weight: bold;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    box-shadow: inset 0 0 8px rgba(255,255,255,0.2), 0 0 12px #ff0000;
+    text-shadow: 0 0 4px rgba(0,0,0,0.6);
+    cursor: pointer;
+    font-size: 1rem;
+    animation: pulseGlow 2.5s infinite;
+}
+
+@keyframes pulseGlow {
+    0%, 100% { box-shadow: inset 0 0 8px rgba(255,255,255,0.2), 0 0 12px #ff0000; }
+    50%      { box-shadow: inset 0 0 12px rgba(255,255,255,0.3), 0 0 18px #ff3333; }
+}
+
+
+@keyframes shine {
+    0%   { left: -50%; }
+    50%  { left: 100%; }
+    100% { left: 100%; }
+}
+
+
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+
+    background-image: 
+        repeating-linear-gradient(45deg, rgba(255,255,255,0.02) 0px, rgba(255,255,255,0.02) 1px, transparent 1px, transparent 6px);
+
+    opacity: 0.15;
+    z-index: -1;
+}
+
+#particles {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -1;
+}
+
+
+
 footer{
     border: 2px solid;
     border-radius: 20px;
@@ -52,58 +158,88 @@ footer{
     letter-spacing: 3px;
 }
 
-/* Bouton Log in façon casino */
-.login-button button {
+/* --- Boutons Log in / Register --- */
+.login-buttons {
+    position: absolute;
+    top: 55px;
+    right: 30px;
+    display: flex;
+    gap: 15px;
+}
+
+#login-btn {
     background: linear-gradient(45deg, #d4af37, #ffcc00);
     color: #121212;
     font-weight: bold;
-    font-size: 1rem;
     padding: 10px 20px;
     border: 2px solid #d4af37;
     border-radius: 8px;
     box-shadow: 0 0 10px #d4af37;
     cursor: pointer;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transition: 0.2s;
 }
 
-.login-button button:hover {
+#login-btn:hover {
     transform: scale(1.05);
     box-shadow: 0 0 15px #ffd700;
 }
 
-/* Formulaire pop-up casino */
-.login-form {
+#register-btn {
+    background: linear-gradient(45deg, #ff0000, #cc0000);
+    color: white;
+    font-weight: bold;
+    padding: 10px 20px;
+    border: 2px solid #ff0000;
+    border-radius: 8px;
+    box-shadow: 0 0 10px #ff0000;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+#register-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 15px #ff3333;
+}
+
+/* --- Formulaires pop-up --- */
+.form-popup {
     position: absolute;
-    top: 160px; /* juste en dessous du header */
+    top: 160px;
     right: 30px;
-    width: 300px;
-    background-color: rgba(0, 0, 0, 0.85); /* fond transparent */
+    width: 320px;
+    background-color: rgba(0, 0, 0, 0.85);
     padding: 20px;
     border: 2px solid #d4af37;
     border-radius: 12px;
     color: #ffd700;
     box-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+    animation: fadeIn 0.3s ease-out;
     z-index: 1000;
 }
 
-.login-form label {
+.form-popup form {
+    padding: 10px;
+}
+
+.form-popup label {
     display: block;
     margin-top: 10px;
     font-weight: bold;
 }
 
-.login-form input {
+.form-popup input {
     width: 100%;
-    padding: 8px;
+    padding: 10px 12px;
     margin-top: 5px;
+    margin-bottom: 10px;
     background-color: #333;
     color: #fff;
     border: 1px solid #d4af37;
     border-radius: 5px;
 }
 
-.login-form button {
-    margin-top: 15px;
+/* --- Bouton submit du login --- */
+.login-submit {
     width: 100%;
     padding: 10px;
     background: linear-gradient(45deg, #ff0000, #cc0000);
@@ -115,31 +251,75 @@ footer{
     cursor: pointer;
 }
 
+/* --- Style inversé pour le register --- */
+.register-style {
+    border-color: #ff0000;
+    box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+}
+
+.register-submit {
+    width: 100%;
+    padding: 10px;
+    background: linear-gradient(45deg, #ffd700, #d4af37);
+    color: #121212;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    box-shadow: 0 0 10px #ffd700;
+    cursor: pointer;
+}
+
+/* --- Animations --- */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+
 .casino-characters {
     display: flex;
     justify-content: center;
-    gap: 60px;
-    margin: 60px auto;
-    color: #ffd700;
-    flex-wrap: wrap;
+    gap: 40px;
+    margin: 80px auto;
+    padding: 20px;
+    max-width: 1200px;
+    flex-wrap: wrap; /* wrap par défaut */
+    z-index: 1;
 }
 
+/* Force l’alignement horizontal sur les grands écrans */
+@media screen and (min-width: 1100px) {
+    .casino-characters {
+        flex-wrap: nowrap;
+    }
+}
+
+/* Carte personnage */
 .character {
+    flex: 0 0 240px;
     text-align: center;
-    width: 220px;
-    min-height: 320px;
-    padding: 10px;
-    background-color: rgba(0,0,0,0.6);
+    min-height: 340px;
+    padding: 18px 14px;
+    background: linear-gradient(145deg, rgba(40,0,0,0.85), rgba(0,0,0,0.7));
     border: 2px solid #d4af37;
-    border-radius: 12px;
-    box-shadow: 0 0 15px rgba(212,175,55,0.5);
-    transition: transform 0.3s ease;
+    border-radius: 16px;
+    box-shadow:
+        0 0 18px rgba(212,175,55,0.4),
+        inset 0 0 8px rgba(255,0,0,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+    overflow: hidden;
 }
 
+/* Hover */
 .character:hover {
-    transform: scale(1.05);
+    transform: scale(1.06);
+    box-shadow:
+        0 0 28px rgba(255,215,100,0.6),
+        inset 0 0 12px rgba(255,0,0,0.2);
 }
 
+/* Image */
 .character img {
     width: 180px;
     height: 180px;
@@ -147,7 +327,92 @@ footer{
     border: 3px solid #d4af37;
     border-radius: 50%;
     margin-bottom: 15px;
+    box-shadow: 0 0 12px rgba(212,175,55,0.4);
+}
+
+/* Texte */
+.character p {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: #f5e7b8;
+    font-family: "Segoe UI", sans-serif;
+    text-shadow: 0 0 4px rgba(0,0,0,0.6);
 }
 
 
+.promo-banner {
+    text-align: center;
+    background: linear-gradient(90deg, #d4af37, #ffcc00);
+    color: #121212;
+    font-weight: bold;
+    font-size: 1.2rem;
+    padding: 15px;
+    margin: 40px auto;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(212,175,55,0.7);
+    animation: pulse 2s infinite;
+}
+
+/* Animation légère */
+@keyframes pulse {
+    0% { box-shadow: 0 0 10px rgba(212,175,55,0.5); }
+    50% { box-shadow: 0 0 25px rgba(212,175,55,0.9); }
+    100% { box-shadow: 0 0 10px rgba(212,175,55,0.5); }
+}
+
+.intro-texte {
+    max-width: 900px;
+    margin: 35px auto 45px;
+    padding: 28px 32px;
+
+    /* Fond subtil, élégant, premium */
+    background: radial-gradient(circle at top, rgba(255, 255, 255, 0.05), rgba(0, 0, 0, 0.85));
+    backdrop-filter: blur(3px);
+
+    /* Bordures premium */
+    border-left: 3px solid rgba(212, 175, 55, 0.55);
+    border-right: 3px solid rgba(212, 175, 55, 0.55);
+    border-radius: 14px;
+
+    /* Typographie haut de gamme */
+    font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+    font-size: 1.05rem;
+    line-height: 1.75;
+    color: #f5e7b8;
+    text-align: center;
+
+    /* Ombre élégante */
+    box-shadow: 0 0 22px rgba(0, 0, 0, 0.75);
+    position: relative;
+}
+
+/* Accentuation du nom du casino */
+.intro-texte strong {
+    color: #ffd873;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+/* Séparation visuelle entre paragraphes (si tu utilises <br><br>) */
+.intro-texte br {
+    line-height: 2.4;
+}
+
+/* Liseré lumineux discret en haut */
+.intro-texte::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 25%;
+    width: 50%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #ffd873, transparent);
+    opacity: 0.7;
+}
+
+/* Effet de glow très léger au survol (premium, pas cheap) */
+.intro-texte:hover {
+    box-shadow: 0 0 28px rgba(212, 175, 55, 0.35);
+    transition: box-shadow 0.3s ease;
+}
 
