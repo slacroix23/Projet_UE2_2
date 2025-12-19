@@ -1,14 +1,70 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
     <title>Casino</title>
-    <link rel="stylesheet" href="../static/index.css">
 </head>
+
 <body>
     <header class="casino-header">
+        <div class="logo">
+            <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" />
+        </div>
         <div class="bandeau">Bienvenue sur notre Casino</div>
+        <div class="login-button">
+            <button id="login-toggle" onclick="toggleLoginForm()">Log in</button>
+        </div>
     </header>
+
+    <ul>
+        <!--integration de python (temporaire)-->
+        {% for user in users %}
+        <li>{{ user["username"] }}</li>
+        {% endfor %}
+    </ul>
+
+    <!-- Formulaire caché par défaut -->
+<div id="login-form" class="login-form" style="display: none;">
+    <form action="/login" method="POST">
+        <label for="username">Username :</label>
+        <input type="text" id="username" name="username" required autocomplete="username">
+        <label for="password">Mot de passe :</label>
+        <input type="password" id="password" name="password" required autocomplete="current-password">
+        <button type="submit">Valider</button>
+    </form>
+</div>
+
+<section class="casino-characters">
+    <div class="character">
+        <img src="{{ url_for('static', filename='VIP1.png') }}" alt="VIP 1">
+        <p>“J'ai vendu ma voiture pour Trust the Roll !” <br><br> - Franck Leboeuf</p>
+    </div>
+    <div class="character">
+        <img src="{{ url_for('static', filename='VIP2.png') }}" alt="VIP 2">
+        <p>“Grâce à Trust the Roll, la Corée du Nord a financé son programme nucléaire !” <br><br> - Sun Minjae</p>
+    </div>
+    <div class="character">
+        <img src="{{ url_for('static', filename='VIP3.png') }}" alt="VIP 3">
+        <p>“Sans Trust the Roll, je n'aurais pas pu rembourser ma terrasse..” <br><br> - Xavier Dupont de Ligonnès</p>
+    </div>
+    <div class="character">
+        <img src="{{ url_for('static', filename='VIP4.png') }}" alt="VIP 4">
+        <p>“Voilà les dépenses publiques ! C'est un bon moyen de dépenser l'argent des français” <br><br> - Le FISC </p>
+    </div>
+</section>
+
+
+    <!-- Script pour afficher/masquer le formulaire -->
+    <script>
+function toggleLoginForm() {
+    const form = document.getElementById("login-form");
+    form.style.display = (form.style.display === "none") ? "flex" : "none";
+}
+</script>
+
 </body>
+
 </html>
