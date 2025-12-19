@@ -1,0 +1,8 @@
+[MASTER]
+ignore=casino_v2.db,.venv,venv
+
+[MESSAGES CONTROL]
+disable=C0114,C0116,W0621,C0115
+
+[REPORTS]
+output-format=colorized
