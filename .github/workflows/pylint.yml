@@ -7,7 +7,6 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        # On s'adapte aux versions récentes que tu sembles utiliser
         python-version: ["3.10", "3.11", "3.12"]
 
     steps:
