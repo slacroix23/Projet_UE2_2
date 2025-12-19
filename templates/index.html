@@ -4,7 +4,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Utilise url_for pour charger ton CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
     <title>Casino</title>
 </head>
@@ -31,10 +30,25 @@
     </form>
 </div>
 
+<section class="casino-characters">
+    <div class="character">
+        <img src="{{ url_for('static', filename='VIP1.png') }}" alt="VIP 1">
+        <p>“J'ai vendu ma voiture pour Trust the Roll !” <br><br> - Franck Leboeuf</p>
+    </div>
+    <div class="character">
+        <img src="{{ url_for('static', filename='VIP2.png') }}" alt="VIP 2">
+        <p>“Grâce à Trust the Roll, la Corée du Nord a financé son programme nucléaire !” <br><br> - Sun Minjae</p>
+    </div>
+    <div class="character">
+        <img src="{{ url_for('static', filename='VIP3.png') }}" alt="VIP 3">
+        <p>“Sans Trust the Roll, je n'aurais pas pu rembourser ma terrasse..” <br><br> - Xavier Dupont de Ligonnès</p>
+    </div>
+    <div class="character">
+        <img src="{{ url_for('static', filename='VIP4.png') }}" alt="VIP 4">
+        <p>“Voilà les dépenses publiques ! C'est un bon moyen de dépenser l'argent des français” <br><br> - Le FISC </p>
+    </div>
+</section>
 
-    <footer>
-        <p>text exemple v3</p>
-    </footer>
 
     <!-- Script pour afficher/masquer le formulaire -->
     <script>
