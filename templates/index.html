@@ -20,13 +20,6 @@
         </div>
     </header>
 
-    <ul>
-        <!--integration de python (temporaire)-->
-        {% for user in users %}
-        <li>{{ user["username"] }}</li>
-        {% endfor %}
-    </ul>
-
     <!-- Formulaire caché par défaut -->
 <div id="login-form" class="login-form" style="display: none;">
     <form action="/login" method="POST">
