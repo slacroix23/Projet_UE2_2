@@ -10,4 +10,5 @@ venv/
 .env
 
 # Dossiers systèmes ou erreurs précédentes
-git/
+git/.pytest_cache/
+__pycache__/

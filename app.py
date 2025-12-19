@@ -35,8 +35,13 @@ def choix():
 def blackjack(): 
     return render_template('blackjack.html')
 
-@app.route('/jouer-a-la-roulette')
+# In your app.py
+@app.route('/jouer-a-la-roulette', methods=['GET', 'POST'])
 def roulette():
+    if request.method == 'POST':
+        amount = request.form.get('amount')
+        choice = request.form.get('choice')
+        return render_template('roulette.html', result=...)
     return render_template('roulette.html')
 
 if __name__ == "__main__":
