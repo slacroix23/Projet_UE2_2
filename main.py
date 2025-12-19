@@ -25,11 +25,11 @@ def login():
     username = request.form["username"]
     password = request.form["password"]
     # logique de login ici
-    return redirect(url_for("games"))
+    return redirect(url_for("choix"))
 
-@app.route("/games")
-def games():
-    return render_template("games.html")
+@app.route("/choix")
+def choix():
+    return render_template("choix.html")
 
 
 if __name__ == "__main__":
