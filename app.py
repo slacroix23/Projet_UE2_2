@@ -1,3 +1,4 @@
+# pylint: disable=redefined-outer-name
 """
 Module principal de l'application Casino.
 Gère les routes et l'accès à la base de données SQLite.
