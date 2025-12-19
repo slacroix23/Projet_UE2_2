@@ -52,58 +52,88 @@ footer{
     letter-spacing: 3px;
 }
 
-/* Bouton Log in façon casino */
-.login-button button {
+/* --- Boutons Log in / Register --- */
+.login-buttons {
+    position: absolute;
+    top: 55px;
+    right: 30px;
+    display: flex;
+    gap: 15px;
+}
+
+#login-btn {
     background: linear-gradient(45deg, #d4af37, #ffcc00);
     color: #121212;
     font-weight: bold;
-    font-size: 1rem;
     padding: 10px 20px;
     border: 2px solid #d4af37;
     border-radius: 8px;
     box-shadow: 0 0 10px #d4af37;
     cursor: pointer;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transition: 0.2s;
 }
 
-.login-button button:hover {
+#login-btn:hover {
     transform: scale(1.05);
     box-shadow: 0 0 15px #ffd700;
 }
 
-/* Formulaire pop-up casino */
-.login-form {
+#register-btn {
+    background: linear-gradient(45deg, #ff0000, #cc0000);
+    color: white;
+    font-weight: bold;
+    padding: 10px 20px;
+    border: 2px solid #ff0000;
+    border-radius: 8px;
+    box-shadow: 0 0 10px #ff0000;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+#register-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 15px #ff3333;
+}
+
+/* --- Formulaires pop-up --- */
+.form-popup {
     position: absolute;
-    top: 160px; /* juste en dessous du header */
+    top: 160px;
     right: 30px;
-    width: 300px;
-    background-color: rgba(0, 0, 0, 0.85); /* fond transparent */
+    width: 320px;
+    background-color: rgba(0, 0, 0, 0.85);
     padding: 20px;
     border: 2px solid #d4af37;
     border-radius: 12px;
     color: #ffd700;
     box-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+    animation: fadeIn 0.3s ease-out;
     z-index: 1000;
 }
 
-.login-form label {
+.form-popup form {
+    padding: 10px;
+}
+
+.form-popup label {
     display: block;
     margin-top: 10px;
     font-weight: bold;
 }
 
-.login-form input {
+.form-popup input {
     width: 100%;
-    padding: 8px;
+    padding: 10px 12px;
     margin-top: 5px;
+    margin-bottom: 10px;
     background-color: #333;
     color: #fff;
     border: 1px solid #d4af37;
     border-radius: 5px;
 }
 
-.login-form button {
-    margin-top: 15px;
+/* --- Bouton submit du login --- */
+.login-submit {
     width: 100%;
     padding: 10px;
     background: linear-gradient(45deg, #ff0000, #cc0000);
@@ -114,6 +144,31 @@ footer{
     box-shadow: 0 0 10px #ff0000;
     cursor: pointer;
 }
+
+/* --- Style inversé pour le register --- */
+.register-style {
+    border-color: #ff0000;
+    box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+}
+
+.register-submit {
+    width: 100%;
+    padding: 10px;
+    background: linear-gradient(45deg, #ffd700, #d4af37);
+    color: #121212;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    box-shadow: 0 0 10px #ffd700;
+    cursor: pointer;
+}
+
+/* --- Animations --- */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
 
 .casino-characters {
     display: flex;
@@ -147,6 +202,26 @@ footer{
     border: 3px solid #d4af37;
     border-radius: 50%;
     margin-bottom: 15px;
+}
+
+.promo-banner {
+    text-align: center;
+    background: linear-gradient(90deg, #d4af37, #ffcc00);
+    color: #121212;
+    font-weight: bold;
+    font-size: 1.2rem;
+    padding: 15px;
+    margin: 40px auto;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(212,175,55,0.7);
+    animation: pulse 2s infinite;
+}
+
+/* Animation légère */
+@keyframes pulse {
+    0% { box-shadow: 0 0 10px rgba(212,175,55,0.5); }
+    50% { box-shadow: 0 0 25px rgba(212,175,55,0.9); }
+    100% { box-shadow: 0 0 10px rgba(212,175,55,0.5); }
 }
 
 

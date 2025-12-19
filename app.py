@@ -31,6 +31,15 @@ def login():
 def choix():
     return render_template("choix.html")
 
+@app.route("/register", methods=["POST"])
+def register():
+    username = request.form["username"]
+    password = request.form["password"]
+    confirm = request.form["confirm_password"]
+
+    if password != confirm:
+        return "Les mots de passe ne correspondent pas", 400
+    return redirect(url_for("home"))
 
 if __name__ == "__main__":
     app.run(debug=True)
