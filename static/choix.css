@@ -50,4 +50,66 @@ footer{
     text-transform: uppercase;
     letter-spacing: 3px;
 }
+/* Le conteneur principal */
+.games-container {
+    display: flex !important;
+    flex-direction: row;      /* Force l'alignement horizontal */
+    justify-content: center;  /* Centre les deux blocs horizontalement */
+    align-items: flex-start;  /* Aligne le haut des images */
+    gap: 40px;                /* Espace entre les deux jeux */
+    width: 100%;              /* Prend toute la largeur de l'écran */
+    padding: 50px 0;          /* Espace en haut et en bas */
+    flex-wrap: nowrap;        /* Empêche le retour à la ligne forcé */
+}
 
+/* Si vous avez mis des balises <a> autour de vos cartes */
+.game-link {
+    text-decoration: none;    /* Enlève le soulignement du lien */
+    display: block;           /* Permet au lien de se comporter comme un bloc */
+}
+
+/* Les cartes de jeu */
+.game-card {
+    text-align: center;
+    width: 400px;             /* Largeur fixe pour chaque jeu */
+    flex-shrink: 0;           /* Empêche les cartes de s'écraser */
+}
+
+.game-image {
+    width: 100%;              /* L'image prend toute la largeur de la card */
+    height: auto;
+    border-radius: 15px;
+    border: 3px solid #d4af37;
+    transition: transform 0.3s ease;
+}
+
+.game-card p {
+    color: #d4af37;
+    font-weight: bold;
+    font-size: 1.2rem;
+    margin-top: 15px;
+}
+/* Enlève le style par défaut du lien */
+.game-link {
+    text-decoration: none;
+    display: block;
+    transition: all 0.3s ease;
+}
+
+/* Effet quand on passe la souris sur la carte */
+.game-link:hover .game-image {
+    transform: scale(1.05); /* L'image grandit légèrement */
+    border-color: #ffffff;  /* La bordure devient blanche ou plus brillante */
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.8); /* Lueur dorée */
+    filter: brightness(1.2); /* L'image devient plus lumineuse */
+}
+
+.game-link:hover p {
+    color: #ffffff; /* Le texte change de couleur au survol */
+    text-shadow: 0 0 10px #d4af37;
+}
+
+/* Optionnel : Effet de clic (quand on appuie) */
+.game-link:active {
+    transform: scale(0.98);
+}

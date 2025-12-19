@@ -31,6 +31,13 @@ def login():
 def choix():
     return render_template("choix.html")
 
+@app.route('/jouer-au-blackjack')
+def blackjack(): 
+    return render_template('blackjack.html')
+
+@app.route('/jouer-a-la-roulette')
+def roulette():
+    return render_template('roulette.html')
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000, debug=True)
