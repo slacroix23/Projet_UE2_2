@@ -1,22 +1,119 @@
-/* --- Styles du Bandeau --- */
-.casino-header {
-    display: flex;
-    justify-content: center; /* Centre le texte horizontalement */
-    align-items: center;     /* Centre le texte verticalement */
-    height: 100px;           /* Hauteur du bandeau */
-    background-color: #121212; /* Noir mat profond */
-    border-bottom: 4px solid #d4af37; /* Ligne dorée en bas */
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.7);
-    font-family: 'Arial Black', Gadget, sans-serif;
+
+body{
+    background-color: #500303;
+    display:flex;
+    flex-direction: column;
+}
+footer{
+    border: 2px solid;
+    border-radius: 20px;
+    color: rgb(238, 207, 31);
+    box-shadow: 0 1px 5px rgb(238, 207, 31);
+    margin: 20px;
+    padding: 5px;
+}
+.container {
+    align-self: center;
+    justify-content: space-around;
+    text-align: center;
+    color: rgb(238, 207, 31);
+    border: 2px solid;
+    border-radius: 20px;
+    box-shadow: 0 3px 10px rgb(238, 207, 31);
+    margin: 20px;
+    padding: 20px;
+    width: fit-content;
 }
 
-/* --- Style du Texte de Bienvenue --- */
-.bandeau {
-    color: #d4af37;          /* Couleur or */
-    font-size: 2rem;
-    font-weight: bold;
-    text-transform: uppercase;
-    letter-spacing: 5px;     /* Espacement des lettres pour le style */
-    text-align: center;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Ombre pour la lisibilité */
+.casino-header {
+    display: flex;
+    justify-content: space-between; /* logo à gauche, texte centré */
+    align-items: center;
+    height: 150px;
+    background-color: #121212;
+    border-bottom: 4px solid #d4af37; /* Ligne dorée */
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+    position: relative; /* permet de centrer le texte indépendamment */
+    padding: 0 30px;
 }
+
+.logo img {
+    height: 160px;   /* ajuste la taille */
+}
+
+.bandeau {
+    position: absolute; /* détache du flux flex */
+    left: 50%;
+    transform: translateX(-50%); /* centre horizontalement */
+    color: #d4af37;
+    font-family: 'Arial Black', sans-serif;
+    font-size: 2.5rem;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+}
+
+/* Bouton Log in façon casino */
+.login-button button {
+    background: linear-gradient(45deg, #d4af37, #ffcc00);
+    color: #121212;
+    font-weight: bold;
+    font-size: 1rem;
+    padding: 10px 20px;
+    border: 2px solid #d4af37;
+    border-radius: 8px;
+    box-shadow: 0 0 10px #d4af37;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.login-button button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 15px #ffd700;
+}
+
+/* Formulaire pop-up casino */
+.login-form {
+    position: absolute;
+    top: 160px; /* juste en dessous du header */
+    right: 30px;
+    width: 300px;
+    background-color: rgba(0, 0, 0, 0.85); /* fond transparent */
+    padding: 20px;
+    border: 2px solid #d4af37;
+    border-radius: 12px;
+    color: #ffd700;
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+    z-index: 1000;
+}
+
+.login-form label {
+    display: block;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+.login-form input {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    background-color: #333;
+    color: #fff;
+    border: 1px solid #d4af37;
+    border-radius: 5px;
+}
+
+.login-form button {
+    margin-top: 15px;
+    width: 100%;
+    padding: 10px;
+    background: linear-gradient(45deg, #ff0000, #cc0000);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    box-shadow: 0 0 10px #ff0000;
+    cursor: pointer;
+}
+
+
+
