@@ -1,1 +1,14 @@
-__pycache__
+# Python - Fichiers de cache (le plus important)
+__pycache__/
+*.pyc
+
+# Base de données locale (pour éviter d'écraser celle des autres)
+*.db
+
+# Environnement virtuel
+venv/
+.env
+
+# Dossiers systèmes ou erreurs précédentes
+git/.pytest_cache/
+__pycache__/

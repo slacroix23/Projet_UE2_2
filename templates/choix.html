@@ -1,12 +1,34 @@
 <!DOCTYPE html>
-<h1> TEST </h1>
-<ul>
-    {% for user in users %}
-        <li>{{ user["username"] }}</li>
-    {% endfor %}
-</ul>
-<ul>
-    {% for hash in users %}
-        <li>{{ hash["hash"] }}</li>
-    {% endfor %}
-</ul>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=, initial-scale=1.0">
+    <title>Choix du jeu</title>
+    <link rel="stylesheet" href="../static/choix.css">
+</head>
+
+<body>
+    <header class="casino-header">
+        <div class="logo">
+            <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" />
+        </div>
+        <div class="bandeau">Choisissez votre Jeu !!</div>
+    </header>
+
+    <main class="games-container">
+        <a href="{{ url_for('blackjack') }}" class="game-link">
+            <div class="game-card">
+                <img src="../static/blackjack.png" class="game-image">
+                <p>Maîtrisez l'art du 21</p>
+            </div>
+        </a>
+        <a href="{{ url_for('roulette') }}" class="game-link">
+            <div class="game-card">
+            <img src="../static/roulette.png" class="game-image">
+            <p>Faites vos jeux, rien ne va plus !</p>
+        </div>
+    </main>
+</body>
+
+</html>
