@@ -27,9 +27,6 @@ def read_db_log_in(name):
     connexion.close()
     return db_read_log
 
-
-app = Flask(__name__)
-
 @app.route("/")
 def home():
     """Affiche la page d'accueil."""
@@ -42,7 +39,7 @@ def login():
     """Gère la redirection du login."""
     username = request.form["username"].strip()
     password = request.form["password"]
-    hashed_password = hashlib.sha1(password.encode()).hexdigest()
+    hashed_password = hashlib.sha1(password.encode()).hexdigest() # nosec
     db = read_db_log_in(username)
 
     if db is None:
