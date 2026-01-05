@@ -15,7 +15,7 @@ def connexion_database():
 def read_db():
     connexion = connexion_database()
     #recupération de toute la table users
-    db_read = connexion.execute(f"SELECT * FROM users;").fetchall() 
+    db_read = connexion.execute("SELECT * FROM users;").fetchall() 
     connexion.close()
     return db_read
 
@@ -46,14 +46,14 @@ def login():
     db = read_db_log_in(username)
 
     if db is None:
-       return redirect(url_for("croissantage"))
+        return redirect(url_for("croissantage"))
     
     if username == db["username"] :
         if db["hash"] == hashed_password :
             return redirect(url_for("choix"))
         else:
             return redirect(url_for("croissantage"))
-    else : 
+    else: 
         return redirect(url_for("croissantage"))
 
 
