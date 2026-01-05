@@ -365,23 +365,23 @@ footer{
     margin: 35px auto 45px;
     padding: 28px 32px;
 
-    /* Fond subtil, élégant, premium */
+    /* Fond*/
     background: radial-gradient(circle at top, rgba(255, 255, 255, 0.05), rgba(0, 0, 0, 0.85));
     backdrop-filter: blur(3px);
 
-    /* Bordures premium */
+    /* Bordures */
     border-left: 3px solid rgba(212, 175, 55, 0.55);
     border-right: 3px solid rgba(212, 175, 55, 0.55);
     border-radius: 14px;
 
-    /* Typographie haut de gamme */
+    /* Typographie*/
     font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
     font-size: 1.05rem;
     line-height: 1.75;
     color: #f5e7b8;
     text-align: center;
 
-    /* Ombre élégante */
+    /* Ombre */
     box-shadow: 0 0 22px rgba(0, 0, 0, 0.75);
     position: relative;
 }
@@ -393,7 +393,7 @@ footer{
     letter-spacing: 0.5px;
 }
 
-/* Séparation visuelle entre paragraphes (si tu utilises <br><br>) */
+/* Séparation visuelle entre paragraphes */
 .intro-texte br {
     line-height: 2.4;
 }
