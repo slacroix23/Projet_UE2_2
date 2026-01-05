@@ -1,41 +1,42 @@
-name: Pylint & Security Scan
+name: Quality & Security Pipeline
 
 on: [push, pull_request]
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: ["3.11"] 
-
     steps:
     - uses: actions/checkout@v4
 
-    - name: Set up Python ${{ matrix.python-version }}
+    - name: Set up Python 3.11
       uses: actions/setup-python@v5
       with:
-        python-version: ${{ matrix.python-version }}
+        python-version: "3.11"
 
-    - name: Install dependencies
+    - name: Install All Dependencies
       run: |
         python -m pip install --upgrade pip
-        # On ajoute 'bandit' ici pour qu'il soit reconnu plus tard
-        pip install pylint flask pytest bandit 
+        # On regroupe tout ici pour gagner du temps
+        pip install pylint flask pytest bandit safety mypy pytest-cov radon ruff
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
-    - name: Analysing the code with pylint
-      run: |
-        pylint app.py tests/test_app.py
+    - name: 1. Style Check (Pylint)
+      run: pylint app.py tests/test_app.py
 
-    - name: Security scan with Bandit
-      run: |
-        bandit -r . -v
+    - name: 2. Fast Linting (Ruff)
+      run: ruff check .
 
-    - name: Install Safety
-      run: pip install safety
+    - name: 3. Type Checking (Mypy)
+      run: mypy . --ignore-missing-imports
 
-    - name: Dependency security scan with Safety
-      run: |
-        # On scanne les dépendances pour trouver des failles connues
-        safety check --full-report
+    - name: 4. Security Scan (Bandit)
+      run: bandit -r . -v
+
+    - name: 5. Dependency Check (Safety)
+      run: safety check --full-report
+
+    - name: 6. Logic Tests & Coverage (Pytest)
+      run: pytest --cov=app tests/
+
+    - name: 7. Complexity Analysis (Radon)
+      run: radon cc app.py -s -n B
