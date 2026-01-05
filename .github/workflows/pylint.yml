@@ -30,3 +30,7 @@ jobs:
     - name: Analysing the code with pylint
       run: |
         pylint app.py tests/test_app.py
+
+    - name: Security scan with Bandit
+      run: |
+        bandit -r . -v
