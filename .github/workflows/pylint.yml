@@ -31,3 +31,11 @@ jobs:
     - name: Security scan with Bandit
       run: |
         bandit -r . -v
+
+    - name: Install Safety
+      run: pip install safety
+
+    - name: Dependency security scan with Safety
+      run: |
+        # On scanne les dépendances pour trouver des failles connues
+        safety check --full-report
