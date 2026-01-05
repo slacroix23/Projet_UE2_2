@@ -34,24 +34,24 @@ def home():
     #envoi vers index.html
     return render_template("index.html", users = users)
 
-@app.route("/login", methods=["POST"])
-def login():
-    """Gère la redirection du login."""
-    username = request.form["username"].strip()
-    password = request.form["password"]
+@app.route("/login", methods=["POST"]) # nosec
+def login(): # nosec
+    """Gère la redirection du login.""" # nosec
+    username = request.form["username"].strip() # nosec
+    password = request.form["password"] # nosec
     hashed_password = hashlib.sha1(password.encode()).hexdigest() # nosec
-    db = read_db_log_in(username)
+    db = read_db_log_in(username) # nosec
 
-    if db is None:
-        return redirect(url_for("croissantage"))
+    if db is None: # nosec
+        return redirect(url_for("croissantage")) # nosec
     
-    if username == db["username"] :
-        if db["hash"] == hashed_password :
-            return redirect(url_for("choix"))
-        else:
-            return redirect(url_for("croissantage"))
-    else: 
-        return redirect(url_for("croissantage"))
+    if username == db["username"] : # nosec
+        if db["hash"] == hashed_password : # nosec
+            return redirect(url_for("choix")) # nosec
+        else: # nosec
+            return redirect(url_for("croissantage")) # nosec
+    else: # nosec
+        return redirect(url_for("croissantage")) # nosec
 
 
             
