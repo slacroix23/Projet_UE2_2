@@ -15,7 +15,7 @@ def connexion_database():
 def read_db():
     connexion = connexion_database()
     #recupération de toute la table users
-    db_read = connexion.execute("SELECT * FROM users;").fetchall() 
+    db_read = connexion.execute("SELECT * FROM users;").fetchall()
     connexion.close()
     return db_read
 
@@ -23,7 +23,7 @@ def read_db():
 def read_db_log_in(name):
     connexion = connexion_database()
     #recupération du bon user uniquement
-    db_read_log = connexion.execute("SELECT * FROM users WHERE username = ?;", [name]).fetchone() 
+    db_read_log = connexion.execute("SELECT * FROM users WHERE username = ?;", [name]).fetchone()
     connexion.close()
     return db_read_log
 
@@ -42,9 +42,9 @@ def login(): # nosec
     hashed_password = hashlib.sha1(password.encode()).hexdigest() # nosec
     db = read_db_log_in(username) # nosec
 
-    if db is None: # nosec
+    if db is None:# nosec
         return redirect(url_for("croissantage")) # nosec
-    
+
     if username == db["username"] : # nosec
         if db["hash"] == hashed_password : # nosec
             return redirect(url_for("choix")) # nosec
@@ -54,7 +54,7 @@ def login(): # nosec
         return redirect(url_for("croissantage")) # nosec
 
 
-            
+
 
 
 @app.route("/choix")
@@ -81,4 +81,3 @@ def roulette():
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000, debug=True) # nosec
-    
