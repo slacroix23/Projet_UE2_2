@@ -1,3 +1,9 @@
 flask
-requests
+pylint
+ruff
+radon
+mypy
 pytest
+pytest-cov
+bandit
+safety
