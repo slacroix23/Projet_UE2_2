@@ -2,8 +2,6 @@
 Module principal de l'application Casino Flask.
 Gère l'authentification, le Blackjack et la Roulette.
 """
-
-import hashlib
 import random
 import sqlite3
 from flask import Flask, render_template, request, redirect, url_for, jsonify
@@ -83,13 +81,9 @@ def read_db_log_in(name):
 def write_db(name, password):
     connexion = connexion_database()
     db_write=connexion.execute("INSERT INTO users (username, hash) VALUES (?, ?);",[name,password])
-    db_write=db_write
-    #m'insultez pas vous avez qu'a pas mettre de regles sur les variables non utilisées
     connexion.commit()
     connexion.close()
-    writed = True
-    return writed
-
+    return db_write
 # --- ROUTES NAVIGATION ---
 
 @app.route("/")
@@ -106,6 +100,7 @@ def login():
     # Hachage SHA1 conservé à ta demande. 
     # Ajout du tag # nosec pour que Bandit ignore l'alerte B324.
     #hashed_password = hashlib.sha1(password.encode()).hexdigest()  # nosec B324
+    #je laisse ca la pour voir les erreurs qu'on a corrigé
 
     db_user = read_db_log_in(username)
 
