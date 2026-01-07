@@ -1,0 +1,46 @@
+name: Quality & Security Pipeline
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python 3.11
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.11"
+
+    - name: Install All Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pylint flask pytest bandit safety mypy pytest-cov radon ruff
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+    - name: 1. Style Check (Pylint)
+      run: pylint --disable=R1705,C0303 app.py tests/test_app.py
+
+    - name: 2. Fast Linting (Ruff)
+      run: ruff check .
+
+    - name: 3. Type Checking (Mypy)
+      run: mypy . --ignore-missing-imports
+
+    - name: 4. Security Scan (Bandit)
+      run: bandit -r . -v
+
+    - name: 5. Dependency Check (Safety)
+      run: safety check --full-report
+
+    - name: 6. Logic Tests & Coverage (Pytest)
+      run: pytest --cov=app tests/
+
+    - name: 7. Complexity Analysis (Radon)
+      run: radon cc app.py -s -n B
+
+    - name: Analysing the code with pylint
+      run: |
+        # On dit à pylint d'ignorer l'erreur R1705 (no-else-return) et C0303 (espaces)
+        pylint --disable=R1705,C0303 app.py tests/test_app.py
