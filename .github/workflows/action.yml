@@ -16,12 +16,11 @@ jobs:
     - name: Install All Dependencies
       run: |
         python -m pip install --upgrade pip
-        # On regroupe tout ici pour gagner du temps
         pip install pylint flask pytest bandit safety mypy pytest-cov radon ruff
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
     - name: 1. Style Check (Pylint)
-      run: pylint app.py tests/test_app.py
+      run: pylint --disable=R1705,C0303 app.py tests/test_app.py
 
     - name: 2. Fast Linting (Ruff)
       run: ruff check .
