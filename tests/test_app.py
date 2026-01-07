@@ -12,9 +12,9 @@ def client():
 def test_home_page(client):
     """Vérifie que la page d'accueil s'affiche."""
     response = client.get('/')
-    assert response.status_code == 200
+    assert response.status_code == 200 #nosec
 
 def test_choix_page(client):
     """Vérifie que la page de choix s'affiche."""
     response = client.get('/choix')
-    assert response.status_code == 200
+    assert response.status_code == 200 # nosec
