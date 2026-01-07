@@ -3,7 +3,7 @@ __pycache__/
 *.py[cod]
 *$py.class
 .pytest_cache/
-.mypy_cache/
+.mypy_cache/       # <--- C'est lui qui génère les 1100+ fichiers !
 .ruff_cache/
 
 # --- Environnement ---
@@ -12,8 +12,6 @@ venv/
 
 # --- Base de données ---
 *.db
-# Si tu veux garder ta structure mais pas les données :
-# !mon_schema.db 
 
 # --- IDE (Visual Studio Code) ---
 .vscode/
