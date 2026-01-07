@@ -125,5 +125,4 @@ def stand(game_id):
     return jsonify({"result": result, "dealer_hand": game.dealer_hand, "dealer_score": dealer_score})
 
 if __name__ == "__main__":
-    print("--- ROUTES CHARGÉES ---")
     app.run(host='0.0.0.0', port=5000, debug=True)
