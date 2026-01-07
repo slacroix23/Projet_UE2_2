@@ -50,7 +50,7 @@ body::after {
     width: 100%;
     height: 100%;
     pointer-events: none;
-    z-index: -3;
+    z-index: -1;
 }
 
 .casino-header {
@@ -77,4 +77,137 @@ body::after {
     font-family: 'Arial Black', sans-serif;
     font-size: 2.5rem;
     text-transform: uppercase;
+}
+
+.hand {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    min-height: 110px;
+    margin: 15px 0;
+}
+
+/* Style pour simuler une carte blanche */
+.card-visual {
+    background: white;
+    color: black;
+    border-radius: 8px;
+    padding: 15px 10px;
+    width: 60px;
+    height: 90px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    border: 1px solid #ccc;
+}
+#game-container {
+    position: relative;
+    z-index: 10; /* Pour passer AU-DESSUS des particules */
+    max-width: 900px;
+    margin: 40px auto;
+    text-align: center;
+    color: white; /* Force le texte en blanc */
+    font-family: 'Arial', sans-serif;
+}
+
+.table {
+    background: rgba(0, 0, 0, 0.4);
+    padding: 30px;
+    border-radius: 50px;
+    border: 2px solid rgba(212, 175, 55, 0.3); /* Bordure dorée subtile */
+    backdrop-filter: blur(5px);
+    margin-bottom: 30px;
+}
+
+.table {
+    background: rgba(0, 0, 0, 0.3); /* Un fond sombre semi-transparent */
+    padding: 40px;
+    border-radius: 30px;
+    border: 2px solid #d4af37; /* Bordure dorée */
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+}
+
+h3 {
+    color: #d4af37; /* Texte en Or */
+    margin: 10px 0;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.controls {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+button {
+    background: #121212;
+    color: #d4af37;
+    border: 2px solid #d4af37;
+    padding: 10px 25px;
+    font-weight: bold;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: 0.3s;
+}
+
+button:hover:not(:disabled) {
+    background: #d4af37;
+    color: #121212;
+}
+
+button:disabled {
+    opacity: 0.3;
+    border-color: #666;
+    color: #666;
+}
+
+.card-visual {
+    background: white;
+    color: #121212;
+    border-radius: 8px;
+    width: 70px; /* Légèrement plus large */
+    height: 105px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    font-weight: bold;
+    box-shadow: 0 6px 12px rgba(0,0,0,0.5);
+    border: 1px solid #ddd;
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Animation d'apparition des cartes */
+.card-visual {
+    animation: dealCard 0.5s ease-out forwards;
+}
+
+@keyframes dealCard {
+    from { transform: translateY(-50px) rotate(20deg); opacity: 0; }
+    to { transform: translateY(0) rotate(0deg); opacity: 1; }
+}
+
+/* Le dos de la carte du croupier */
+.card-visual.back {
+    background: linear-gradient(135deg, #121212 0%, #2c3e50 100%);
+    color: #d4af37;
+    border: 2px solid #d4af37;
+}
+
+/* Pour le rouge des Coeurs et Carreaux */
+.card-red {
+    color: #e74c3c !important;
+}
+
+#status-message {
+    height: 60px;
+    font-size: 2rem;
+    font-weight: bold;
+    color: #ffffff;
+    text-shadow: 0 0 10px rgba(212, 175, 55, 0.8);
+    margin: 20px 0;
 }
