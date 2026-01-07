@@ -9,13 +9,14 @@ app = Flask(__name__)
 
 # --- LOGIQUE DU BLACKJACK ---
 class BlackjackGame:
-    def __init__(self):
+    def __init__(self, bet): # On ajoute bet ici
         suits = ['C', 'D', 'H', 'S']
         ranks = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A']
         self.deck = [f"{r}{s}" for r in ranks for s in suits]
         random.shuffle(self.deck)
         self.player_hand = [self.deck.pop(), self.deck.pop()]
         self.dealer_hand = [self.deck.pop(), self.deck.pop()]
+        self.bet = bet  # On mémorise la mise pour ce jeu
         self.status = "en_cours"
     
     def calculate_score(self, hand):
@@ -95,14 +96,26 @@ def blackjack():
 @app.route('/start', methods=['POST'])
 def start_game():
     global game_counter
+    data = request.get_json()
+    
+    # On récupère la mise depuis le JavaScript
+    try:
+        bet = int(data.get('bet', 0))
+    except (ValueError, TypeError):
+        return jsonify({"error": "Mise invalide"}), 400
+
+    if bet <= 0:
+        return jsonify({"error": "La mise doit être supérieure à 0"}), 400
+
     game_counter += 1
-    new_game = BlackjackGame()
+    new_game = BlackjackGame(bet)
     games[game_counter] = new_game
     return jsonify({
         "game_id": game_counter,
         "player_hand": new_game.player_hand,
         "dealer_visible_card": new_game.dealer_hand[0],
-        "player_score": new_game.calculate_score(new_game.player_hand)
+        "player_score": new_game.calculate_score(new_game.player_hand),
+        "bet": new_game.bet
     })
 
 @app.route('/game/<int:game_id>/hit', methods=['POST'])
@@ -118,21 +131,37 @@ def hit(game_id):
 def stand(game_id):
     game = games.get(game_id)
     if not game: return jsonify({"error": "Inexistant"}), 404
+    
     player_score = game.calculate_score(game.player_hand)
     dealer_score = game.calculate_score(game.dealer_hand)
+    
     while dealer_score < 17:
         game.dealer_hand.append(game.deck.pop())
         dealer_score = game.calculate_score(game.dealer_hand)
     
-    if dealer_score > 21 or player_score > dealer_score: result = "Gagné !"
-    elif player_score < dealer_score: result = "Perdu !"
-    else: result = "Égalité !"
+    gain = 0
+    if dealer_score > 21 or player_score > dealer_score:
+        result = "Gagné !"
+        gain = game.bet * 2
+    elif player_score < dealer_score:
+        result = "Perdu !"
+        gain = 0
+    else:
+        result = "Égalité ! "
+        gain = game.bet
     
-    return jsonify({"result": result, "dealer_hand": game.dealer_hand, "dealer_score": dealer_score})
+    return jsonify({
+        "result": result, 
+        "dealer_hand": game.dealer_hand, 
+        "dealer_score": dealer_score,
+        "gain": gain
+    })
+    
 
-if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=5000, debug=True) # nosec
-    
+@app.route('/jouer-a-la-roulette')
+def roulette():
+    # Cette fonction correspond à url_for('roulette')
+    return render_template('roulette.html')
 
 @app.route("/api/roulette/spin", methods=["POST"])
 def roulette_spin():
@@ -176,3 +205,5 @@ def roulette_spin():
         "result": result_type
     })
 
+if __name__ == "__main__":
+    app.run(host='0.0.0.0', port=5000, debug=True) # nosec

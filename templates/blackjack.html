@@ -14,27 +14,32 @@
         <div class="bandeau">Blackjack</div>
     </header>
 
-    <main id="game-container">
-        <div class="table">
-            <div class="dealer-area">
-                <h3>Croupier : <span id="dealer-score">?</span></h3>
-                <div id="dealer-cards" class="hand"></div>
-            </div>
-
-            <div id="status-message"></div>
-
-            <div class="player-area">
-                <h3>Votre Main : <span id="player-score">0</span></h3>
-                <div id="player-cards" class="hand"></div>
-            </div>
+<main id="game-container">
+    <div class="table">
+        <div class="dealer-area">
+            <h3>Croupier : <span id="dealer-score">?</span></h3>
+            <div id="dealer-cards" class="hand"></div>
         </div>
 
-        <div class="controls">
-            <button id="btn-start">Nouvelle Partie</button>
-            <button id="btn-hit" disabled>Tirer</button>
-            <button id="btn-stand" disabled>S'arrêter</button>
+        <div id="status-message"></div>
+
+        <div class="player-area">
+            <h3>Votre Main : <span id="player-score">0</span></h3>
+            <div id="player-cards" class="hand"></div>
         </div>
-    </main>
+    </div>
+
+    <div class="controls">
+        <div id="bet-container">
+            <label for="bet-amount">Mise :</label>
+            <input type="number" id="bet-amount" value="10" min="1" style="width: 60px;">
+        </div>
+        
+        <button id="btn-start">Nouvelle Partie</button>
+        <button id="btn-hit" disabled>Tirer</button>
+        <button id="btn-stand" disabled>S'arrêter</button>
+    </div>
+</main>
 
     <canvas id="particles"></canvas>
 
@@ -69,72 +74,93 @@
             }
             animate();
 
-            // --- 2. LOGIQUE DU JEU ---
             let currentGameId = null;
 
-            function getCardHTML(cardCode) {
-                if (!cardCode) return '';
-                const symbols = { 'H': '♥', 'D': '♦', 'C': '♣', 'S': '♠' };
-                const rank = cardCode.slice(0, -1);
-                const suitLetter = cardCode.slice(-1);
-                const symbol = symbols[suitLetter] || suitLetter;
-                const isRed = suitLetter === 'H' || suitLetter === 'D';
-                return `<div class="card-visual ${isRed ? 'card-red' : ''}">${rank}<br>${symbol}</div>`;
+        function getCardHTML(cardCode) {
+            if (!cardCode) return '';
+            const symbols = { 'H': '♥', 'D': '♦', 'C': '♣', 'S': '♠' };
+            const rank = cardCode.slice(0, -1);
+            const suitLetter = cardCode.slice(-1);
+            const symbol = symbols[suitLetter] || suitLetter;
+            const isRed = suitLetter === 'H' || suitLetter === 'D';
+            return `<div class="card-visual ${isRed ? 'card-red' : ''}">${rank}<br>${symbol}</div>`;
+        }
+
+        function updateUI(data) {
+            // Mise à jour de la main du joueur
+            if (data.player_hand) {
+                document.getElementById('player-cards').innerHTML = data.player_hand.map(c => getCardHTML(c)).join('');
+                document.getElementById('player-score').innerText = data.player_score;
             }
-
-            function updateUI(data) {
-                if (data.player_hand) {
-                    document.getElementById('player-cards').innerHTML = data.player_hand.map(c => getCardHTML(c)).join('');
-                    document.getElementById('player-score').innerText = data.player_score;
-                }
-                if (data.dealer_visible_card && !data.result) {
-                    document.getElementById('dealer-cards').innerHTML = getCardHTML(data.dealer_visible_card) + `<div class="card-visual back">?</div>`;
-                }
-                if (data.result) {
-                    document.getElementById('status-message').innerText = data.result;
-                    document.getElementById('dealer-cards').innerHTML = data.dealer_hand.map(c => getCardHTML(c)).join('');
-                    document.getElementById('dealer-score').innerText = data.dealer_score;
-                    toggleButtons(false);
-                }
+            // Affichage initial du croupier (une carte cachée)
+            if (data.dealer_visible_card && !data.result) {
+                document.getElementById('dealer-cards').innerHTML = getCardHTML(data.dealer_visible_card) + `<div class="card-visual back">?</div>`;
             }
-
-            function toggleButtons(isPlaying) {
-                document.getElementById('btn-start').disabled = isPlaying;
-                document.getElementById('btn-hit').disabled = !isPlaying;
-                document.getElementById('btn-stand').disabled = !isPlaying;
+            // Résultat final
+            if (data.result) {
+                let message = `${data.result}`;
+                if (data.gain > 0) {
+                    message += ` Vous gagnez ${data.gain} jetons !`;
+                } else if (data.result === "Perdu !") {
+                    message += ` Vous avez perdu votre mise.`;
+                }
+                
+                document.getElementById('status-message').innerText = message;
+                document.getElementById('dealer-cards').innerHTML = data.dealer_hand.map(c => getCardHTML(c)).join('');
+                document.getElementById('dealer-score').innerText = data.dealer_score;
+                toggleButtons(false);
             }
+        }
 
-            // --- 3. ÉVÉNEMENTS (Placés à l'intérieur du DOMContentLoaded) ---
-            document.getElementById('btn-start').addEventListener('click', async () => {
-                try {
-                    const response = await fetch('/start', { method: 'POST' });
-                    const data = await response.json();
-                    currentGameId = data.game_id;
-                    document.getElementById('status-message').innerText = "";
-                    document.getElementById('dealer-score').innerText = "?";
-                    updateUI(data);
-                    toggleButtons(true);
-                } catch (e) { console.error("Erreur Start:", e); }
-            });
+        function toggleButtons(isPlaying) {
+            document.getElementById('btn-start').disabled = isPlaying;
+            document.getElementById('bet-amount').disabled = isPlaying;
+            document.getElementById('btn-hit').disabled = !isPlaying;
+            document.getElementById('btn-stand').disabled = !isPlaying;
+        }
 
-            document.getElementById('btn-hit').addEventListener('click', async () => {
-                if (!currentGameId) return;
-                const response = await fetch(`/game/${currentGameId}/hit`, { method: 'POST' });
+        // --- 3. ÉVÉNEMENTS ---
+        document.getElementById('btn-start').addEventListener('click', async () => {
+            const mise = document.getElementById('bet-amount').value;
+            
+            try {
+                const response = await fetch('/start', { 
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ bet: mise }) // Envoi de la mise au Python
+                });
                 const data = await response.json();
-                updateUI(data);
-                if (data.status === "Bust!") {
-                    document.getElementById('status-message').innerText = "Bust ! Vous avez perdu.";
-                    toggleButtons(false);
+                
+                if (data.error) {
+                    alert(data.error);
+                    return;
                 }
-            });
 
-            document.getElementById('btn-stand').addEventListener('click', async () => {
-                if (!currentGameId) return;
-                const response = await fetch(`/game/${currentGameId}/stand`, { method: 'POST' });
-                const data = await response.json();
+                currentGameId = data.game_id;
+                document.getElementById('status-message').innerText = "";
+                document.getElementById('status-message').className = "";
+                document.getElementById('dealer-score').innerText = "?";
                 updateUI(data);
-            });
+                toggleButtons(true);
+            } catch (e) { console.error("Erreur Start:", e); }
         });
-    </script>
-</body>
-</html>
+
+        document.getElementById('btn-hit').addEventListener('click', async () => {
+            if (!currentGameId) return;
+            const response = await fetch(`/game/${currentGameId}/hit`, { method: 'POST' });
+            const data = await response.json();
+            updateUI(data);
+            if (data.status === "Bust!") {
+                document.getElementById('status-message').innerText = "Bust ! Vous avez dépassé 21.";
+                toggleButtons(false);
+            }
+        });
+
+        document.getElementById('btn-stand').addEventListener('click', async () => {
+            if (!currentGameId) return;
+            const response = await fetch(`/game/${currentGameId}/stand`, { method: 'POST' });
+            const data = await response.json();
+            updateUI(data);
+        });
+    });
+</script>
