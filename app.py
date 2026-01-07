@@ -69,11 +69,6 @@ def connexion_database():
     db_conn.row_factory = sqlite3.Row
     return db_conn
 
-def read_db():
-    """Récupère la liste de tous les utilisateurs."""
-    with connexion_database() as conn:
-        db_read = conn.execute("SELECT * FROM users;").fetchall()
-    return db_read
 
 def read_db_log_in(name):
     """Récupère les informations d'un utilisateur par son nom."""
@@ -83,13 +78,21 @@ def read_db_log_in(name):
         ).fetchone()
     return db_read_log
 
+
+def write_db(name, password):
+    connexion = connexion_database()
+    db_write = connexion.execute("INSERT INTO users (username, hash) VALUES (?, ?);", [name, password])
+    connexion.commit()
+    connexion.close()
+    writed = True
+    return writed
+
 # --- ROUTES NAVIGATION ---
 
 @app.route("/")
 def home():
     """Route pour la page d'accueil."""
-    users = read_db()
-    return render_template("index.html", users=users)
+    return render_template("index.html")
 
 @app.route("/login", methods=["POST"])
 def login():
@@ -103,10 +106,30 @@ def login():
     
     db_user = read_db_log_in(username)
 
+    
+    if db_user is None:
+        return redirect(url_for("croissantage"))
+
     if db_user and db_user["hash"] == hashed_password:
         return redirect(url_for("choix"))
 
     return redirect(url_for("croissantage"))
+
+            
+@app.route("/register", methods = ["POST"])
+def register():
+    print(request.form)
+    """Gère la redirection du register."""
+    new_username = request.form.get("username")
+    new_password = request.form.get("password")
+
+    #if not new_username or not new_password:
+    #    return "Formulaire invalide", 400
+
+    hashed_password = hashlib.sha1(new_password.encode()).hexdigest()
+    write_db(new_username, hashed_password)
+    return render_template("index.html")
+
 
 @app.route("/choix")
 def choix():

@@ -36,7 +36,7 @@
 
 <!-- Formulaire Register -->
 <div id="register-form" class="form-popup register-style" style="display: none;">
-    <form action="/register" method="POST">
+    <form action="/register" method="POST" id="register">
         <label for="new-username">Nom d'utilisateur :</label>
         <input type="text" id="new-username" name="username" required>
 
@@ -46,10 +46,13 @@
         <label for="confirm-password">Confirmer le mot de passe :</label>
         <input type="password" id="confirm-password" name="confirm_password" required>
 
-        <button type="submit" class="register-submit">S'inscrire</button>
+        <div id="mdp" class="erreur" style="display: none;">Le mot de passe doit etre identique</div><br>
+        
+        <button type="submit" class="register-submit" style="display: none;" id="submit">S'inscrire</button>
+        <button id="verify" onclick="VerifyPassowrd()" class="register-submit">S'inscrire</button>
+        
     </form>
 </div>
-
 <div class="promo-banner">
     🎁 Bonus de bienvenue : 500 jetons offerts à l'inscription !
 </div>
@@ -85,6 +88,29 @@
 </section>
     <!-- Script pour afficher/masquer le formulaire -->
 <script>
+
+function VerifyPassowrd(){
+    const password1 = document.getElementById("new-password");
+    const password = password1.value;
+
+    const confirm_password1 = document.getElementById("confirm-password");
+    const confirm_password = confirm_password1.value;
+
+    console.log(password, confirm_password)
+
+    if (confirm_password == password) {
+        document.getElementById("mdp").style.display = "none";
+        document.getElementById("register").requestSubmit(document.getElementById("submit"));
+        console.log("correct")
+    }
+        
+    else {
+        console.log("incorrect")
+        document.getElementById("mdp").style.display = "block";
+    }
+}
+
+
 function toggleLoginForm() {
     const form = document.getElementById("login-form");
     const isVisible = form.style.display === "block";
