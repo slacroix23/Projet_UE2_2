@@ -1,7 +1,8 @@
 """Module principal de l'application Casino Flask."""
 import sqlite3
 import hashlib
-from flask import Flask, render_template, request, redirect, url_for
+import random
+from flask import Flask, render_template, request, redirect, url_for, jsonify
 
 DATABASE = 'casino_v2.db'
 app = Flask(__name__)
@@ -46,15 +47,12 @@ def login():
         return redirect(url_for("croissantage"))
     
     if username == db["username"] :
-        if db["hash"] == hashed_password :
+        if db["hash"] == hashed_password:
             return redirect(url_for("choix"))
         else:
             return redirect(url_for("croissantage"))
     else: 
         return redirect(url_for("croissantage"))
-
-
-            
 
 
 @app.route("/choix")
@@ -82,3 +80,46 @@ def roulette():
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000, debug=True) # nosec
     
+
+@app.route("/api/roulette/spin", methods=["POST"])
+def roulette_spin():
+    from flask import request, jsonify
+    import random
+
+    ROUGE = {1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36}
+    NOIR = {2,4,6,8,10,11,13,15,17,20,22,24,26,28,29,31,33,35}
+
+    data = request.get_json()
+    bet_type = data.get("type")
+    bet_value = data.get("value")
+    amount = float(data.get("amount", 0))
+
+    numero = random.randint(0, 36)
+    couleur = "vert" if numero == 0 else "rouge" if numero in ROUGE else "noir"
+
+    gain = 0
+    result_type = "perdu"
+
+    if bet_type == "color" and bet_value == couleur:
+        gain = amount * 2
+        result_type = "gagné"
+
+    elif bet_type == "number" and str(bet_value) == str(numero):
+        gain = amount * 36
+        result_type = "gagné"
+
+    elif bet_type == "parity" and numero != 0:
+        if bet_value == "pair" and numero % 2 == 0:
+            gain = amount * 2
+            result_type = "gagné"
+        elif bet_value == "impair" and numero % 2 == 1:
+            gain = amount * 2
+            result_type = "gagné"
+
+    return jsonify({
+        "numero": numero,
+        "couleur": couleur,
+        "gain": gain,
+        "result": result_type
+    })
+

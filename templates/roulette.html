@@ -1,11 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=, initial-scale=1.0">
-    <link rel="stylesheet" href="../static/blackjack.css">
-    <title>Blackjack</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='roulette.css') }}">
+    <title>Roulette</title>
 </head>
 
 <body>
@@ -15,12 +14,53 @@
         </div>
         <div class="bandeau">Roulette</div>
     </header>
-    </header>
+
     <canvas id="particles"></canvas>
+
+    <main class="roulette-container">
+        <h1>Placez votre mise</h1>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="bet-type">Type de pari</label>
+                <select id="bet-type">
+                    <option value="color">Couleur</option>
+                    <option value="number">Numéro</option>
+                    <option value="parity">Pair / Impair</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="bet-value">Valeur</label>
+                <select id="bet-value">
+                    <option value="rouge">Rouge</option>
+                    <option value="noir">Noir</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="amount">Mise</label>
+                <input type="number" id="amount" value="10" min="1">
+            </div>
+        </div>
+
+       <div class="svg-wheel-container">
+            <div class="svg-pointer">▼</div>
+            <svg id="svg-wheel" viewBox="0 0 100 100">
+                <g id="wheel-group"></g>
+                <circle cx="50" cy="50" r="49" fill="none" stroke="#d4af37" stroke-width="2" />
+            </svg>
+            </div>
+
+        <button id="spin-btn">Lancer</button>
+
+        <div id="result" class="result">En attente…</div>
+    </main>
+
     <script>
+        // --- PARTICULES DORÉES ---
         window.addEventListener("DOMContentLoaded", () => {
             const canvas = document.getElementById("particles");
-            if (!canvas) return;
             const ctx = canvas.getContext("2d");
 
             function resize() {
@@ -61,8 +101,137 @@
             }
             animate();
         });
-        </script>
+
+        let absoluteSpin = 0;
+
+        // --- ORDRE OFFICIEL ROULETTE ---
+        const wheelOrder = [
+            0,
+            32, 15, 19, 4, 21, 2, 25, 17, 34, 6,
+            27, 13, 36, 11, 30, 8, 23, 10, 5, 24,
+            16, 33, 1, 20, 14, 31, 9, 22, 18, 29,
+            7, 28, 12, 35, 3, 26
+        ];
+
+        const colors = {
+            0: "green",
+            rouge: [1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36],
+            noir: [2,4,6,8,10,11,13,15,17,20,22,24,26,28,29,31,33,35]
+        };
+
+        function getColor(n) {
+            if (n === 0) return "green";
+            return colors.rouge.includes(n) ? "red" : "black";
+        }
+
+        // --- DESSIN DE LA ROUE ---
+        function drawWheel() {
+            const group = document.getElementById("wheel-group");
+            group.innerHTML = ""; // ← ESSENTIEL
+            const radius = 48;
+            const anglePer = 360 / wheelOrder.length;
+            const offset = -90; // 0° vers le haut
+
+            wheelOrder.forEach((num, i) => {
+                const start = (i * anglePer + offset) * Math.PI / 180;
+                const end = ((i + 1) * anglePer + offset) * Math.PI / 180;
+
+                const x1 = 50 + radius * Math.cos(start);
+                const y1 = 50 + radius * Math.sin(start);
+                const x2 = 50 + radius * Math.cos(end);
+                const y2 = 50 + radius * Math.sin(end);
+
+                const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+                path.setAttribute("d", `M 50 50 L ${x1} ${y1} A ${radius} ${radius} 0 0 1 ${x2} ${y2} Z`);
+                path.setAttribute("fill", getColor(num));
+                path.setAttribute("stroke", "#d4af37");
+                path.setAttribute("stroke-width", "0.3");
+                group.appendChild(path);
+
+                // Numéro
+                const mid = ((i + 0.5) * anglePer + offset) * Math.PI / 180;
+                const tx = 50 + (radius - 6) * Math.cos(mid);
+                const ty = 50 + (radius - 6) * Math.sin(mid);
+
+                const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                text.setAttribute("x", tx);
+                text.setAttribute("y", ty);
+                text.setAttribute("fill", "#fff");
+                text.setAttribute("font-size", "3");
+                text.setAttribute("text-anchor", "middle");
+                text.setAttribute("alignment-baseline", "middle");
+                text.textContent = num;
+                const deg = ( (i + 0.5) * anglePer + offset );
+                text.setAttribute("transform", `rotate(${deg} ${tx} ${ty})`);
+                group.appendChild(text);
+            });
+        }
+        drawWheel();
+
+        // --- API + ANIMATION ---
+        document.getElementById("spin-btn").addEventListener("click", async () => {
+            const type = document.getElementById("bet-type").value;
+            const value = document.getElementById("bet-value").value;
+            const amount = document.getElementById("amount").value;
+
+            document.getElementById("result").innerText = "Résultat en cours…";
+
+            const res = await fetch("/api/roulette/spin", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ type, value, amount })
+            });
+
+            const data = await res.json();
+
+            const index = wheelOrder.indexOf(data.numero);
+            const anglePer = 360 / wheelOrder.length;
+
+            // calcul de l'angle final
+            const targetAngle = -(index + 0.5) * anglePer;
+
+            absoluteSpin += 360 * 6; // 6 tours complets
+
+            const finalAngle = absoluteSpin + targetAngle;
+
+            const group = document.getElementById("wheel-group");
+            group.style.transition = "transform 4s cubic-bezier(0.1, 0.9, 0.2, 1)";
+            group.style.transformOrigin = "50% 50%";
+            group.style.transform = `rotate(${finalAngle}deg)`;
+
+
+            setTimeout(() => {
+                document.getElementById("result").innerText =
+                    `Numéro : ${data.numero} (${data.couleur})
+            Résultat : ${data.result}
+            Gain : ${data.gain}`;
+            }, 4000);
+
+        });
+
+        // --- ADAPTATION DU CHAMP ---
+        document.getElementById("bet-type").addEventListener("change", () => {
+            const type = document.getElementById("bet-type").value;
+            const container = document.getElementById("bet-value");
+
+            if (type === "color") {
+                container.outerHTML = `
+                    <select id="bet-value">
+                        <option value="rouge">Rouge</option>
+                        <option value="noir">Noir</option>
+                    </select>`;
+            } else if (type === "number") {
+                container.outerHTML = `<input type="number" id="bet-value" min="0" max="36" value="17">`;
+            } else if (type === "parity") {
+                container.outerHTML = `
+                    <select id="bet-value">
+                        <option value="pair">Pair</option>
+                        <option value="impair">Impair</option>
+                    </select>`;
+            }
+        });
+
+    </script>
 
 </body>
-
 </html>
