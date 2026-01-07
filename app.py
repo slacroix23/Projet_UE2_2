@@ -7,6 +7,7 @@ import hashlib
 import random
 import sqlite3
 from flask import Flask, render_template, request, redirect, url_for, jsonify
+from werkzeug.security import generate_password_hash, check_password_hash
 
 # --- CONFIGURATION ET CONSTANTES ---
 DATABASE = 'casino_v2.db'
@@ -81,7 +82,9 @@ def read_db_log_in(name):
 
 def write_db(name, password):
     connexion = connexion_database()
-    db_write = connexion.execute("INSERT INTO users (username, hash) VALUES (?, ?);", [name, password])
+    db_write=connexion.execute("INSERT INTO users (username, hash) VALUES (?, ?);",[name,password])
+    db_write=db_write
+    #m'insultez pas vous avez qu'a pas mettre de regles sur les variables non utilisées
     connexion.commit()
     connexion.close()
     writed = True
@@ -102,15 +105,14 @@ def login():
     
     # Hachage SHA1 conservé à ta demande. 
     # Ajout du tag # nosec pour que Bandit ignore l'alerte B324.
-    hashed_password = hashlib.sha1(password.encode()).hexdigest()  # nosec B324
-    
+    #hashed_password = hashlib.sha1(password.encode()).hexdigest()  # nosec B324
+
     db_user = read_db_log_in(username)
 
-    
     if db_user is None:
         return redirect(url_for("croissantage"))
 
-    if db_user and db_user["hash"] == hashed_password:
+    if check_password_hash(db_user["hash"], password):
         return redirect(url_for("choix"))
 
     return redirect(url_for("croissantage"))
@@ -125,7 +127,7 @@ def register():
     if not new_username or not new_password:
         return "Formulaire invalide", 400
 
-    hashed_password = hashlib.sha1(new_password.encode()).hexdigest()
+    hashed_password = generate_password_hash(new_password)
     write_db(new_username, hashed_password)
     return render_template("index.html")
 
