@@ -118,13 +118,12 @@ def login():
             
 @app.route("/register", methods = ["POST"])
 def register():
-    print(request.form)
     """Gère la redirection du register."""
     new_username = request.form.get("username")
     new_password = request.form.get("password")
 
-    #if not new_username or not new_password:
-    #    return "Formulaire invalide", 400
+    if not new_username or not new_password:
+        return "Formulaire invalide", 400
 
     hashed_password = hashlib.sha1(new_password.encode()).hexdigest()
     write_db(new_username, hashed_password)
