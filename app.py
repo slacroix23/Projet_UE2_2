@@ -241,3 +241,4 @@ def roulette_spin():
 if __name__ == "__main__":
     # Correction B104 (Hôte local) et B201 (Debug off)
     app.run(host='127.0.0.1', port=5000, debug=False)
+    
