@@ -1,14 +1,24 @@
-# Python - Fichiers de cache (le plus important)
+# --- Python ---
 __pycache__/
-*.pyc
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
 
-# Base de données locale (pour éviter d'écraser celle des autres)
-*.db
-
-# Environnement virtuel
+# --- Environnement ---
 venv/
 .env
 
-# Dossiers systèmes ou erreurs précédentes
-git/.pytest_cache/
-__pycache__/
+# --- Base de données ---
+*.db
+# Si tu veux garder ta structure mais pas les données :
+# !mon_schema.db 
+
+# --- IDE (Visual Studio Code) ---
+.vscode/
+.history/
+
+# --- Système ---
+.DS_Store
+Thumbs.db
