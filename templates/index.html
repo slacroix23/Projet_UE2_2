@@ -14,20 +14,27 @@
             <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" />
         </div>
         <div class="bandeau">Bienvenue sur notre Casino</div>
-         <div class="login-buttons">
-        <button id="login-btn" onclick="toggleLoginForm()">Log in</button>
-        <button id="register-btn" onclick="toggleRegisterForm()">Register</button>
-        </div>
         <div class="user-info"> 
             <span class="username">{{ session.username }}</span> 
             <span class="balance">Balance : <span id="balance-value">{{ balance }}</span> €</span> 
         </div>
+         <div class="login-buttons">
+            {% if session.username %}
+                <button id="play-btn" onclick="window.location.href='/choix'">Jouer</button>
+            {% else %}
+                <button id="login-btn" onclick="toggleLoginForm()">Log in</button>
+                <button id="register-btn" onclick="toggleRegisterForm()">Register</button>
+            {% endif %}
+        </div>
+
     </header>
 
 
 <!-- Formulaire Log in -->
 <div id="login-form" class="form-popup" style="display: none;">
     <form action="/login" method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
         <label for="username">Username :</label>
         <input type="text" id="username" name="username" required>
 
@@ -43,6 +50,8 @@
 
     
     <form action="/register" method="POST" id="register" onsubmit="return VerifyPassowrd()">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        
         <label for="new-username">Nom d'utilisateur :</label>
         <input type="text" id="new-username" name="username" required>
 
@@ -183,10 +192,27 @@ window.addEventListener("DOMContentLoaded", () => {
         try {
             const res = await fetch("/api/balance");
             const data = await res.json();
+
             const span = document.getElementById("balance-value");
-            if (span) span.textContent = data.balance;
+            if (!span) return;
+
+            const oldValue = span.textContent;
+
+            // Si la balance change → animation
+            if (oldValue !== String(data.balance)) {
+                span.textContent = data.balance;
+
+                // Ajoute la classe d’animation
+                span.parentElement.classList.add("updated");
+
+                // La retire après l’animation
+                setTimeout(() => {
+                    span.parentElement.classList.remove("updated");
+                }, 600);
+            }
+
         } catch (e) {
-                    console.error("Erreur balance :", e);
+            console.error("Erreur balance :", e);
         }
     }
 
@@ -196,6 +222,7 @@ window.addEventListener("DOMContentLoaded", () => {
     // Mise à jour automatique toutes les 2 secondes
     setInterval(autoUpdateBalance, 2000);
 </script>
+
 
 <canvas id="particles"></canvas>
 </body>

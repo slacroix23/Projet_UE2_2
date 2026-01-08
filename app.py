@@ -8,6 +8,7 @@ from flask import Flask, render_template, request, redirect, url_for, jsonify,se
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
 from dotenv import load_dotenv
+from flask_wtf.csrf import CSRFProtect
 
 load_dotenv()
 # --- CONFIGURATION ET CONSTANTES ---
@@ -19,6 +20,25 @@ NOIR = {2, 4, 6, 8, 10, 11, 13, 15, 17, 20, 22, 24, 26, 28, 29, 31, 33, 35}
 app = Flask(__name__)
 
 app.secret_key = os.getenv("SECRET_KEY")
+
+# Activation de la protection CSRF
+csrf = CSRFProtect(app)
+app.config["WTF_CSRF_ENABLED"] = True
+
+@app.after_request
+def apply_security_headers(response):
+    response.headers["X-Frame-Options"] = "DENY"
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    response.headers["Content-Security-Policy"] = (
+        "default-src 'self'; "
+        "script-src 'self' 'unsafe-inline'; "
+        "style-src 'self' 'unsafe-inline'; "
+        "img-src 'self';"
+    )
+    response.headers["Referrer-Policy"] = "no-referrer"
+    response.headers["Permissions-Policy"] = "geolocation=(), microphone=()"
+    return response
+
 
 # Générateur sécurisé pour les jeux (B311) et pour corriger le bug shuffle
 SECURE_GEN = random.SystemRandom()

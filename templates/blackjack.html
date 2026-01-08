@@ -173,21 +173,38 @@
 </script>
 
 <script>
-async function autoUpdateBalance() {
-    try {
-        const res = await fetch("/api/balance");
-        const data = await res.json();
-        const span = document.getElementById("balance-value");
-        if (span) span.textContent = data.balance;
-    } catch (e) {
-        console.error("Erreur balance :", e);
+    async function autoUpdateBalance() {
+        try {
+            const res = await fetch("/api/balance");
+            const data = await res.json();
+
+            const span = document.getElementById("balance-value");
+            if (!span) return;
+
+            const oldValue = span.textContent;
+
+            // Si la balance change → animation
+            if (oldValue !== String(data.balance)) {
+                span.textContent = data.balance;
+
+                // Ajoute la classe d’animation
+                span.parentElement.classList.add("updated");
+
+                // La retire après l’animation
+                setTimeout(() => {
+                    span.parentElement.classList.remove("updated");
+                }, 600);
+            }
+
+        } catch (e) {
+            console.error("Erreur balance :", e);
+        }
     }
-}
 
-// Mise à jour au chargement
-document.addEventListener("DOMContentLoaded", autoUpdateBalance);
+    // Mise à jour au chargement
+    document.addEventListener("DOMContentLoaded", autoUpdateBalance);
 
-// Mise à jour automatique toutes les 2 secondes
-setInterval(autoUpdateBalance, 2000);
+    // Mise à jour automatique toutes les 2 secondes
+    setInterval(autoUpdateBalance, 2000);
 </script>
 
