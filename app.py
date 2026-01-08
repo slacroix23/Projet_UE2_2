@@ -16,7 +16,7 @@ load_dotenv()
 # --- CONFIGURATION ---
 DATABASE = 'casino_v2.db'
 app = Flask(__name__)
-app.secret_key = os.getenv("SECRET_KEY")
+app.secret_key = os.getenv("SECRET_KEY", "mobility-bronze-strife-overreach-calorie-vigorous")
 
 # Protection CSRF
 csrf = CSRFProtect(app)
@@ -133,14 +133,27 @@ def register():
 @app.route("/choix")
 @login_required
 def choix():
-    """Page de sélection des jeux."""
-    return render_template("choix.html")
+    """Page de sélection des jeux avec récupération de la balance."""
+    user = read_db_log_in(session['username'])
+    # On récupère la balance ou on met 1000 par défaut si la colonne n'existe pas encore
+    try:
+        user_balance = user['balance']
+    except (IndexError, KeyError, TypeError):
+        user_balance = 1000
+        
+    return render_template("choix.html", balance=user_balance)
 
 @app.route('/jouer-au-blackjack')
 @login_required
 def blackjack():
-    """Page HTML Blackjack."""
+    """Affiche la page HTML du Blackjack."""
     return render_template('blackjack.html')
+
+@app.route('/jouer-a-la-roulette')
+@login_required
+def roulette():
+    """Affiche la page HTML de la roulette."""
+    return render_template('roulette.html')
 
 # --- API ---
 
@@ -165,6 +178,17 @@ def start_game():
         "player_hand": new_game.player_hand,
         "player_score": new_game.calculate_score(new_game.player_hand)
     })
+
+@app.route('/api/balance')
+@login_required
+def get_balance():
+    """API pour la mise à jour dynamique de la balance en JS."""
+    user = read_db_log_in(session['username'])
+    try:
+        balance = user['balance']
+    except (IndexError, KeyError, TypeError):
+        balance = 1000
+    return jsonify({"balance": balance})
 
 @app.route("/api/roulette/spin", methods=["POST"])
 @login_required
