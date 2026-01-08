@@ -34,3 +34,4 @@ def test_choix_page_authenticated(client):
     
     response = client.get('/choix')
     assert response.status_code == 200
+    
