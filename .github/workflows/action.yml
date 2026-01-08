@@ -29,7 +29,7 @@ jobs:
       run: mypy . --ignore-missing-imports
 
     - name: 4. Security Scan (Bandit)
-      run: bandit -r . -v --exit-zero
+      run: bandit -r . -v
 
     - name: 5. Dependency Check (Safety)
       run: safety check --full-report
