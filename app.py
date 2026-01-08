@@ -53,7 +53,7 @@ def login_required(f):
     return decorated_function
 
 # --- LOGIQUE BLACKJACK ---
-class BlackjackGame:
+class BlackjackGame:    # pylint: disable=R0903
     """Gère la logique d'une partie de Blackjack."""
     def __init__(self, bet):
         ranks = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A']
@@ -181,3 +181,4 @@ def roulette_spin():
 
 if __name__ == "__main__":
     app.run(host='127.0.0.1', port=5000, debug=False)
+    
