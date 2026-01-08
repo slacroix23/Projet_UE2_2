@@ -22,6 +22,18 @@ body {
     100% { background-size: 100%; }
 }
 
+.retour {
+    background: linear-gradient(45deg, #ff0000, #cc0000);
+    color: white;
+    font-weight: bold;
+    padding: 5px 10px;
+    border: 2px solid #ff0000;
+    border-radius: 8px;
+    box-shadow: 0 0 10px #ff0000;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
 /* Fumée rouge animée */
 body::after {
     content: "";
@@ -56,12 +68,14 @@ body::after {
 }
 
 footer {
+    display: flex;
+    justify-content: center;
     border: 2px solid;
     border-radius: 20px;
     color: rgb(238, 207, 31);
     box-shadow: 0 1px 5px rgb(238, 207, 31);
     margin: 20px;
-    padding: 5px;
+    padding: 15px;
 }
 
 .casino-header {
