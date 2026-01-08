@@ -14,24 +14,23 @@
             <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" />
         </div>
         <div class="bandeau">Choisissez votre Jeu !!</div>
-        <div class="user-info"> 
-            <span class="username">{{ session.username }}</span> 
-            <span class="balance">Balance : <span id="balance-value">{{ balance }}</span> €</span> 
+        <div class="user-info">
+            <span class="username">{{ session.username }}</span>
+            <span class="balance">Balance : <span id="balance-value">{{ balance }}</span> €</span>
         </div>
     </header>
 
-    <main class="games-container">
-        <a href="{{ url_for('blackjack') }}" class="game-link">
-            <div class="game-card">
-                <img src="../static/blackjack.png" class="game-image">
-                <p>Maîtrisez l'art du 21</p>
-            </div>
-        </a>
-        <a href="{{ url_for('roulette') }}" class="game-link">
-            <div class="game-card">
-            <img src="../static/roulette.png" class="game-image">
-            <p>Faites vos jeux, rien ne va plus !</p>
-        </div>
+    <link rel="stylesheet" href="{{ url_for('static', filename='choix.css') }}">
+
+    <div class="game-card">
+        <img src="{{ url_for('static', filename='blackjack.png') }}" class="game-image">
+        <p>Maîtrisez l'art du 21</p>
+    </div>
+
+    <div class="game-card">
+        <img src="{{ url_for('static', filename='roulette.png') }}" class="game-image">
+        <p>Faites vos jeux, rien ne va plus !</p>
+    </div>
     </main>
     <script>
         window.addEventListener("DOMContentLoaded", () => {
@@ -77,7 +76,7 @@
             }
             animate();
         });
-        </script>
+    </script>
     <script>
         async function autoUpdateBalance() {
             try {
@@ -114,7 +113,7 @@
         setInterval(autoUpdateBalance, 2000);
     </script>
 
-<canvas id="particles"></canvas>
+    <canvas id="particles"></canvas>
 </body>
 
 </html>

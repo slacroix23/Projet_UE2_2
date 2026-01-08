@@ -119,7 +119,7 @@ def login():
     if db_user and check_password_hash(db_user["hash"], password):
         session['username'] = username
         return redirect(url_for("choix"))
-    return redirect(url_for("croissantage"))
+    return redirect(url_for("home"))
 
 @app.route("/register", methods=["POST"])
 def register():
