@@ -1,16 +1,18 @@
 import os
 import random
 import sqlite3
+from dotenv import load_dotenv
 from functools import wraps
 from flask import Flask, render_template, request, redirect, url_for, jsonify, session
 from werkzeug.security import generate_password_hash, check_password_hash
-from dotenv import load_dotenv
+
+load_dotenv()
 
 # --- INITIALISATION ---
-load_dotenv()
 DATABASE = 'casino_v2.db'
 app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY")
+print(f"La clé chargée est :{app.secret_key}")
 
 # --- CONSTANTES JEU ---
 ROUGE = {1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36}
@@ -106,6 +108,18 @@ def logout():
 @app.route("/croissantage")
 def croissantage():
     return render_template("croissantage.html")
+
+@app.route('/jouer-au-blackjack')
+@login_required
+def blackjack():
+    """Affiche la page du jeu de Blackjack."""
+    return render_template('blackjack.html')
+
+@app.route('/jouer-a-la-roulette')
+@login_required
+def roulette():
+    """Affiche la page de la roulette."""
+    return render_template('roulette.html')
 
 # --- ROUTES API JEUX (Toutes protégées) ---
 
