@@ -1,11 +1,11 @@
 flask
+flask-wtf
 pylint
 ruff
 radon
 mypy
 pytest
 pytest-cov
+python-dotenv
 bandit
 safety
-flask-wtf
-dotenv
