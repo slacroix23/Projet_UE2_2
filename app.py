@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 from functools import wraps
 from flask import Flask, render_template, request, redirect, url_for, jsonify, session
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask_wtf import CSRFProtect
 
 load_dotenv()
 
@@ -12,6 +13,11 @@ load_dotenv()
 DATABASE = 'casino_v2.db'
 app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY")
+
+
+ROUGE = {1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36}
+NOIR = {2, 4, 6, 8, 10, 11, 13, 15, 17, 20, 22, 24, 26, 28, 29, 31, 33, 35}
+
 
 # Activation de la protection CSRF
 csrf = CSRFProtect(app)
