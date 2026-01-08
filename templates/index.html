@@ -18,6 +18,10 @@
         <button id="login-btn" onclick="toggleLoginForm()">Log in</button>
         <button id="register-btn" onclick="toggleRegisterForm()">Register</button>
         </div>
+        <div class="user-info"> 
+            <span class="username">{{ session.username }}</span> 
+            <span class="balance">Balance : <span id="balance-value">{{ balance }}</span> €</span> 
+        </div>
     </header>
 
 
@@ -174,8 +178,24 @@ window.addEventListener("DOMContentLoaded", () => {
     animate();
 });
 </script>
+<script>
+    async function autoUpdateBalance() {
+        try {
+            const res = await fetch("/api/balance");
+            const data = await res.json();
+            const span = document.getElementById("balance-value");
+            if (span) span.textContent = data.balance;
+        } catch (e) {
+                    console.error("Erreur balance :", e);
+        }
+    }
 
+    // Mise à jour au chargement
+    document.addEventListener("DOMContentLoaded", autoUpdateBalance);
 
+    // Mise à jour automatique toutes les 2 secondes
+    setInterval(autoUpdateBalance, 2000);
+</script>
 
 <canvas id="particles"></canvas>
 </body>

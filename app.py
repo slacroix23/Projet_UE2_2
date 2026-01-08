@@ -4,9 +4,12 @@ Gère l'authentification, le Blackjack et la Roulette.
 """
 import random
 import sqlite3
-from flask import Flask, render_template, request, redirect, url_for, jsonify
+from flask import Flask, render_template, request, redirect, url_for, jsonify,session
 from werkzeug.security import generate_password_hash, check_password_hash
+import os
+from dotenv import load_dotenv
 
+load_dotenv()
 # --- CONFIGURATION ET CONSTANTES ---
 DATABASE = 'casino_v2.db'
 # Utilisation de MAJUSCULES pour les constantes globales (validé par Pylint)
@@ -14,6 +17,8 @@ ROUGE = {1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36}
 NOIR = {2, 4, 6, 8, 10, 11, 13, 15, 17, 20, 22, 24, 26, 28, 29, 31, 33, 35}
 
 app = Flask(__name__)
+
+app.secret_key = os.getenv("SECRET_KEY")
 
 # Générateur sécurisé pour les jeux (B311) et pour corriger le bug shuffle
 SECURE_GEN = random.SystemRandom()
@@ -84,6 +89,41 @@ def write_db(name, password):
     connexion.commit()
     connexion.close()
     return db_write
+
+# --- BALANCE UTILISATEUR (MINIMAL) ---
+
+def get_user_balance():
+    """Retourne la balance de l'utilisateur connecté."""
+    user_id = session.get("user_id")
+    if not user_id:
+        return 0
+
+    conn = connexion_database()
+    cur = conn.cursor()
+    cur.execute("SELECT balance FROM users WHERE id = ?;", (user_id,))
+    row = cur.fetchone()
+    conn.close()
+
+    return row["balance"] if row else 0
+
+
+def update_user_balance(amount):
+    """Modifie la balance de l'utilisateur connecté."""
+    user_id = session.get("user_id")
+    if not user_id:
+        return
+
+    conn = connexion_database()
+    cur = conn.cursor()
+    cur.execute(
+        "UPDATE users SET balance = balance + ? WHERE id = ?;",
+        (amount, user_id)
+    )
+    conn.commit()
+    conn.close()
+
+
+
 # --- ROUTES NAVIGATION ---
 
 @app.route("/")
@@ -108,6 +148,8 @@ def login():
         return redirect(url_for("croissantage"))
 
     if check_password_hash(db_user["hash"], password):
+        session["user_id"] = db_user["id"] 
+        session["username"] = db_user["username"]
         return redirect(url_for("choix"))
 
     return redirect(url_for("croissantage"))
@@ -162,6 +204,12 @@ def start_game():
 
     if bet <= 0:
         return jsonify({"error": "La mise doit être supérieure à 0"}), 400
+
+    # Vérifier la balance
+    if bet > get_user_balance():
+        return jsonify({"error": "Balance insuffisante"}), 400
+    # Déduire la mise
+    update_user_balance(-bet)
 
     GAME_COUNTER += 1
     new_game = BlackjackGame(bet)
@@ -221,6 +269,8 @@ def stand(game_id):
         result, gain = "Égalité !", game.bet
 
     game.status = "termine"
+    if gain > 0:
+        update_user_balance(gain)
     return jsonify({
         "result": result,
         "dealer_hand": game.dealer_hand,
@@ -235,6 +285,10 @@ def roulette_spin():
     bet_type = data.get("type")
     bet_value = data.get("value")
     amount = float(data.get("amount", 0))
+    if amount > get_user_balance():
+        return jsonify({"error": "Balance insuffisante"}), 400
+    update_user_balance(-amount)
+
 
     # Aléatoire sécurisé (B311)
     numero = SECURE_GEN.randint(0, 36)
@@ -249,13 +303,27 @@ def roulette_spin():
         is_even = numero % 2 == 0
         if (bet_value == "pair" and is_even) or (bet_value == "impair" and not is_even):
             gain = amount * 2
-
+    if gain > 0:
+        update_user_balance(gain)
     return jsonify({
         "numero": numero,
         "couleur": couleur,
         "gain": gain,
         "result": "gagné" if gain > 0 else "perdu"
     })
+    
+@app.context_processor
+def inject_balance():
+    """Injecte automatiquement la balance dans tous les templates."""
+    try:
+        return {"balance": get_user_balance()}
+    except:
+        return {"balance": None}
+
+@app.route("/api/balance")
+def api_balance():
+    """Retourne la balance actuelle de l'utilisateur en JSON."""
+    return jsonify({"balance": get_user_balance()})
 
 if __name__ == "__main__":
     # Correction B104 (Hôte local) et B201 (Debug off)

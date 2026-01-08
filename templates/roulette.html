@@ -13,6 +13,10 @@
             <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" />
         </div>
         <div class="bandeau">Roulette</div>
+        <div class="user-info"> 
+            <span class="username">{{ session.username }}</span> 
+            <span class="balance">Balance : <span id="balance-value">{{ balance }}</span> €</span> 
+        </div>
     </header>
 
     <canvas id="particles"></canvas>
@@ -235,6 +239,25 @@
         });
 
     </script>
+<script>
+    async function autoUpdateBalance() {
+        try {
+            const res = await fetch("/api/balance");
+            const data = await res.json();
+            const span = document.getElementById("balance-value");
+            if (span) span.textContent = data.balance;
+        } catch (e) {
+                    console.error("Erreur balance :", e);
+        }
+    }
+
+    // Mise à jour au chargement
+    document.addEventListener("DOMContentLoaded", autoUpdateBalance);
+
+    // Mise à jour automatique toutes les 2 secondes
+    setInterval(autoUpdateBalance, 2000);
+</script>
+
 
 </body>
 </html>
