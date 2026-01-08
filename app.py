@@ -1,10 +1,8 @@
-"""
-Module principal de l'application Casino Flask.
-Gère l'authentification, le Blackjack et la Roulette.
-"""
+import os
 import random
 import sqlite3
-from flask import Flask, render_template, request, redirect, url_for, jsonify,session
+from functools import wraps
+from flask import Flask, render_template, request, redirect, url_for, jsonify, session,session
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
 from dotenv import load_dotenv
@@ -13,10 +11,6 @@ from flask_wtf.csrf import CSRFProtect
 load_dotenv()
 # --- CONFIGURATION ET CONSTANTES ---
 DATABASE = 'casino_v2.db'
-# Utilisation de MAJUSCULES pour les constantes globales (validé par Pylint)
-ROUGE = {1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36}
-NOIR = {2, 4, 6, 8, 10, 11, 13, 15, 17, 20, 22, 24, 26, 28, 29, 31, 33, 35}
-
 app = Flask(__name__)
 
 app.secret_key = os.getenv("SECRET_KEY")
@@ -43,65 +37,51 @@ def apply_security_headers(response):
 # Générateur sécurisé pour les jeux (B311) et pour corriger le bug shuffle
 SECURE_GEN = random.SystemRandom()
 
-# --- LOGIQUE DU JEU ---
+# --- LE VIGILE (À mettre avant les routes) ---
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'username' not in session:
+            return redirect(url_for('home'))
+        return f(*args, **kwargs)
+    return decorated_function
 
-class BlackjackGame:  # pylint: disable=too-few-public-methods
-    """Classe gérant la logique d'une partie de Blackjack."""
-
+# --- LOGIQUE BLACKJACK ---
+class BlackjackGame:
     def __init__(self, bet):
-        """Initialise le paquet, mélange et distribue les cartes."""
         suits = ['C', 'D', 'H', 'S']
         ranks = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A']
         self.deck = [f"{r}{s}" for r in ranks for s in suits]
-        
-        # Correction du crash : SystemRandom possède .shuffle()
         SECURE_GEN.shuffle(self.deck)
-        
         self.player_hand = [self.deck.pop(), self.deck.pop()]
         self.dealer_hand = [self.deck.pop(), self.deck.pop()]
         self.bet = bet
         self.status = "en_cours"
 
     def calculate_score(self, hand):
-        """Calcule le score d'une main donnée en gérant les As."""
-        score = 0
-        aces = 0
-        values = {
-            '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9,
-            '10': 10, 'J': 10, 'Q': 10, 'K': 10, 'A': 11
-        }
+        score, aces = 0, 0
+        values = {'2':2,'3':3,'4':4,'5':5,'6':6,'7':7,'8':8,'9':9,'10':10,'J':10,'Q':10,'K':10,'A':11}
         for card in hand:
             rank = card[:-1]
             score += values[rank]
-            if rank == 'A':
-                aces += 1
-        
+            if rank == 'A': aces += 1
         while score > 21 and aces:
             score -= 10
             aces -= 1
         return score
 
-# Stockage global des parties (Noms en majuscules pour le style)
 GAMES = {}
 GAME_COUNTER = 0
 
-# --- FONCTIONS BASE DE DONNÉES ---
-
+# --- BASE DE DONNÉES ---
 def connexion_database():
-    """Crée une connexion à la base de données SQLite."""
     db_conn = sqlite3.connect(DATABASE)
     db_conn.row_factory = sqlite3.Row
     return db_conn
 
-
 def read_db_log_in(name):
-    """Récupère les informations d'un utilisateur par son nom."""
     with connexion_database() as conn:
-        db_read_log = conn.execute(
-            "SELECT * FROM users WHERE username = ?;", [name]
-        ).fetchone()
-    return db_read_log
-
+        return conn.execute("SELECT * FROM users WHERE username = ?;", [name]).fetchone()
 
 def write_db(name, password):
     connexion = connexion_database()
@@ -109,104 +89,56 @@ def write_db(name, password):
     connexion.commit()
     connexion.close()
     return db_write
-
-# --- BALANCE UTILISATEUR (MINIMAL) ---
-
-def get_user_balance():
-    """Retourne la balance de l'utilisateur connecté."""
-    user_id = session.get("user_id")
-    if not user_id:
-        return 0
-
-    conn = connexion_database()
-    cur = conn.cursor()
-    cur.execute("SELECT balance FROM users WHERE id = ?;", (user_id,))
-    row = cur.fetchone()
-    conn.close()
-
-    return row["balance"] if row else 0
-
-
-def update_user_balance(amount):
-    """Modifie la balance de l'utilisateur connecté."""
-    user_id = session.get("user_id")
-    if not user_id:
-        return
-
-    conn = connexion_database()
-    cur = conn.cursor()
-    cur.execute(
-        "UPDATE users SET balance = balance + ? WHERE id = ?;",
-        (amount, user_id)
-    )
-    conn.commit()
-    conn.close()
-
-
-
 # --- ROUTES NAVIGATION ---
 
 @app.route("/")
 def home():
-    """Route pour la page d'accueil."""
     return render_template("index.html")
+
+@app.route("/register", methods=["POST"])
+def register():
+    new_username = request.form.get("username")
+    new_password = request.form.get("password")
+    if new_username and new_password:
+        hashed = generate_password_hash(new_password)
+        write_db(new_username, hashed)
+    return redirect(url_for("home"))
 
 @app.route("/login", methods=["POST"])
 def login():
-    """Gère l'authentification des utilisateurs."""
     username = request.form["username"].strip()
     password = request.form["password"]
-    
-    # Hachage SHA1 conservé à ta demande. 
-    # Ajout du tag # nosec pour que Bandit ignore l'alerte B324.
-    #hashed_password = hashlib.sha1(password.encode()).hexdigest()  # nosec B324
-    #je laisse ca la pour voir les erreurs qu'on a corrigé
-
     db_user = read_db_log_in(username)
 
-    if db_user is None:
-        return redirect(url_for("croissantage"))
-
-    if check_password_hash(db_user["hash"], password):
-        session["user_id"] = db_user["id"] 
-        session["username"] = db_user["username"]
+    if db_user and check_password_hash(db_user["hash"], password):
+        session['username'] = username # On mémorise l'utilisateur !
         return redirect(url_for("choix"))
-
+    
     return redirect(url_for("croissantage"))
 
-            
-@app.route("/register", methods = ["POST"])
-def register():
-    """Gère la redirection du register."""
-    new_username = request.form.get("username")
-    new_password = request.form.get("password")
-
-    if not new_username or not new_password:
-        return "Formulaire invalide", 400
-
-    hashed_password = generate_password_hash(new_password)
-    write_db(new_username, hashed_password)
-    return render_template("index.html")
-
-
 @app.route("/choix")
+@login_required
 def choix():
-    """Page de sélection des jeux."""
     return render_template("choix.html")
 
 @app.route("/croissantage")
 def croissantage():
-    """Page d'erreur de connexion."""
     return render_template("croissantage.html")
 
+@app.route("/logout")
+def logout():
+    session.clear()
+    return redirect(url_for("home"))
+
+# Routes de jeu protégées
 @app.route('/jouer-au-blackjack')
+@login_required
 def blackjack():
-    """Page du jeu de Blackjack."""
     return render_template('blackjack.html')
 
 @app.route('/jouer-a-la-roulette')
+@login_required
 def roulette():
-    """Page du jeu de Roulette."""
     return render_template('roulette.html')
 
 # --- ROUTES API JEUX ---
@@ -224,12 +156,6 @@ def start_game():
 
     if bet <= 0:
         return jsonify({"error": "La mise doit être supérieure à 0"}), 400
-
-    # Vérifier la balance
-    if bet > get_user_balance():
-        return jsonify({"error": "Balance insuffisante"}), 400
-    # Déduire la mise
-    update_user_balance(-bet)
 
     GAME_COUNTER += 1
     new_game = BlackjackGame(bet)
@@ -289,8 +215,6 @@ def stand(game_id):
         result, gain = "Égalité !", game.bet
 
     game.status = "termine"
-    if gain > 0:
-        update_user_balance(gain)
     return jsonify({
         "result": result,
         "dealer_hand": game.dealer_hand,
@@ -305,10 +229,6 @@ def roulette_spin():
     bet_type = data.get("type")
     bet_value = data.get("value")
     amount = float(data.get("amount", 0))
-    if amount > get_user_balance():
-        return jsonify({"error": "Balance insuffisante"}), 400
-    update_user_balance(-amount)
-
 
     # Aléatoire sécurisé (B311)
     numero = SECURE_GEN.randint(0, 36)
@@ -323,29 +243,13 @@ def roulette_spin():
         is_even = numero % 2 == 0
         if (bet_value == "pair" and is_even) or (bet_value == "impair" and not is_even):
             gain = amount * 2
-    if gain > 0:
-        update_user_balance(gain)
+
     return jsonify({
         "numero": numero,
         "couleur": couleur,
         "gain": gain,
         "result": "gagné" if gain > 0 else "perdu"
     })
-    
-@app.context_processor
-def inject_balance():
-    """Injecte automatiquement la balance dans tous les templates."""
-    try:
-        return {"balance": get_user_balance()}
-    except:
-        return {"balance": None}
-
-@app.route("/api/balance")
-def api_balance():
-    """Retourne la balance actuelle de l'utilisateur en JSON."""
-    return jsonify({"balance": get_user_balance()})
 
 if __name__ == "__main__":
-    # Correction B104 (Hôte local) et B201 (Debug off)
     app.run(host='127.0.0.1', port=5000, debug=False)
-    
