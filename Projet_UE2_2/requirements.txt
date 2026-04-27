@@ -1,0 +1,12 @@
+flask
+flask-socketio
+flask-wtf
+pylint
+ruff
+radon
+mypy
+pytest
+pytest-cov
+python-dotenv
+bandit
+safety

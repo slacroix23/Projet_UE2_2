@@ -1,14 +1,14 @@
 """
-Application Casino - Projet UE2-2
+Application Casino - Projet UE2-2 - Projet UE2-2
 """
 import os
 import random
 import sqlite3
 from functools import wraps
-
 from dotenv import load_dotenv
 from flask import Flask, render_template, request, redirect, url_for, jsonify, session
 from flask_wtf.csrf import CSRFProtect
+from flask_socketio import SocketIO, emit
 from werkzeug.security import generate_password_hash, check_password_hash
 
 load_dotenv()
@@ -19,31 +19,47 @@ DATABASE = os.path.join(BASE_DIR, 'casino_v2.db')
 app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY", "mobility-bronze-strife-overreach-calorie-vigorous")
 
-csrf = CSRFProtect(app)
+# 1. Initialise SocketIO sans CSRF (on ajoute check_cors=False pour le test)
+socketio = SocketIO(app, cors_allowed_origins="*", async_mode=None)
+
+# 2. Configure CSRF pour le reste de l'app
 app.config["WTF_CSRF_ENABLED"] = True
+csrf = CSRFProtect(app)
+
 
 # --- CONSTANTES ---
 ROUGE_NUMBERS = {1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36}
 NOIR_NUMBERS = {2,4,6,8,10,11,13,15,17,20,22,24,26,28,29,31,33,35}
 SECURE_GEN = random.SystemRandom()
 
+# --- SÉCURITÉ & HEADERS ---
 @app.after_request
 def apply_security_headers(response):
-    response.headers["X-Frame-Options"] = "DENY"
+    gitresponse.headers["X-Frame-Options"] = "DENY"
     response.headers["X-Content-Type-Options"] = "nosniff"
     response.headers["Content-Security-Policy"] = (
         "default-src 'self'; "
-        "script-src 'self' 'unsafe-inline'; "
+        "script-src 'self' 'unsafe-inline' https://cdn.socket.io; " 
         "style-src 'self' 'unsafe-inline'; "
         "img-src 'self' data:; "
-        "connect-src 'self'; "
-        "font-src 'self' data:; "
-        "navigate-to 'self'; "
-        "media-src 'self'; "
+        "connect-src 'self' ws://127.0.0.1:5000 http://127.0.0.1:5000; "
+        "font-src 'self' data:;"
     )
     response.headers["Referrer-Policy"] = "no-referrer"
     return response
 
+# --- LOGIQUE CHAT (SOCKET.IO) ---
+@socketio.on('send_message')
+def handle_send_message(data):
+    username = session.get('username', 'Anonyme')
+    payload = data.get('payload', '')
+    # On renvoie à tout le monde
+    socketio.emit('new_message', {
+        'user': username,
+        'payload': payload
+    })
+
+# --- DÉCORATEUR ---
 def login_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
@@ -52,17 +68,18 @@ def login_required(f):
         return f(*args, **kwargs)
     return decorated
 
-# --- LOGIQUE BLACKJACK ---
+# --- LOGIQUE BLACKJACK (CLASSES) ---
 class BlackjackGame:
     def __init__(self, bet):
         ranks = ['2','3','4','5','6','7','8','9','10','J','Q','K','A']
         suits = ['C','D','H','S']
-        self.deck = [f"{r}{s}" for r in ranks for s in suits]
+        self.deck = [f"{r}{s}" for r in ranks for s in suits] # Correction ici
         SECURE_GEN.shuffle(self.deck)
 
         self.player_hand = [self.deck.pop(), self.deck.pop()]
         self.dealer_hand = [self.deck.pop(), self.deck.pop()]
         self.bet = bet
+        self.status = "en_cours"
         self.status = "en_cours"
 
     def calculate_score(self, hand):
@@ -85,11 +102,10 @@ class BlackjackGame:
         return len(hand) == 2 and self.calculate_score(hand) == 21
 
     def hit(self):
-        if self.status != "en_cours":
-            return
-        self.player_hand.append(self.deck.pop())
-        if self.calculate_score(self.player_hand) > 21:
-            self.status = "bust"
+        if self.status == "en_cours":
+            self.player_hand.append(self.deck.pop())
+            if self.calculate_score(self.player_hand) > 21:
+                self.status = "bust"
 
     def dealer_play(self):
         while self.calculate_score(self.dealer_hand) < 17:
@@ -186,6 +202,14 @@ def resolve_blackjack_game(game, username, player_busted=False):
 @app.route("/")
 def home():
     return render_template("index.html")
+
+@app.route('/test')
+def page_test():
+    print(" >>> JE SERS LA PAGE TEST ACTUELLEMENT <<< ") # Regarde ton terminal !
+    username = session.get('username', 'Invité')
+    user = read_db_log_in(username)
+    balance = user['balance'] if user else 0
+    return render_template('test.html', balance=balance)
 
 @app.route("/login", methods=["POST"])
 def login():
@@ -398,4 +422,5 @@ def roulette_spin():
 csrf.exempt(roulette_spin)
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=False)
+    # IMPORTANT : Utiliser socketio.run pour que le chat fonctionne
+    socketio.run(app, host='0.0.0.0', port=5000, debug=True)
