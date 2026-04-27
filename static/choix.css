@@ -1,13 +1,15 @@
-/* Fond rouge velours premium */
+/* ========================= */
+/* FOND VELOURS ROUGE        */
+/* ========================= */
+
 body {
     margin: 0;
     position: relative;
-    background: radial-gradient(
-        circle at center,
-        #6b0000 0%,     /* rouge lumineux */
-        #4a0000 30%,    /* rouge velours */
-        #240000 65%,    /* rouge noirci */
-        #000000 100%    /* noir total */
+    background: radial-gradient(circle at center,
+        #6b0000 0%,
+        #4a0000 30%,
+        #240000 65%,
+        #000000 100%
     );
     animation: pulseBg 10s ease-in-out infinite;
     overflow-x: hidden;
@@ -15,12 +17,12 @@ body {
 }
 
 @keyframes pulseBg {
-    0%   { background-size: 100%; }
-    50%  { background-size: 108%; }
+    0% { background-size: 100%; }
+    50% { background-size: 108%; }
     100% { background-size: 100%; }
 }
 
-/* Fumée rouge animée */
+/* Fumée rouge */
 body::after {
     content: "";
     position: fixed;
@@ -37,12 +39,15 @@ body::after {
 }
 
 @keyframes smokeMove {
-    0%   { transform: translate(0%, 0%) scale(1); }
-    50%  { transform: translate(10%, 10%) scale(1.25); }
-    100% { transform: translate(0%, 0%) scale(1); }
+    0% { transform: translate(0,0) scale(1); }
+    50% { transform: translate(10%,10%) scale(1.25); }
+    100% { transform: translate(0,0) scale(1); }
 }
 
-/* Canvas des particules dorées */
+/* ========================= */
+/* CANVAS PARTICULES         */
+/* ========================= */
+
 #particles {
     position: fixed;
     top: 0;
@@ -53,81 +58,105 @@ body::after {
     z-index: -3;
 }
 
-footer{
-    border: 2px solid;
-    border-radius: 20px;
-    color: rgb(238, 207, 31);
-    box-shadow: 0 1px 5px rgb(238, 207, 31);
-    margin: 20px;
-    padding: 5px;
-}
-.container {
-    align-self: center;
-    justify-content: space-around;
-    text-align: center;
-    color: rgb(238, 207, 31);
-    border: 2px solid;
-    border-radius: 20px;
-    box-shadow: 0 3px 10px rgb(238, 207, 31);
-    margin: 20px;
-    padding: 20px;
-    width: fit-content;
-}
+/* ========================= */
+/* HEADER CASINO             */
+/* ========================= */
 
 .casino-header {
     display: flex;
-    justify-content: space-between; /* logo à gauche, texte centré */
+    justify-content: space-between;
     align-items: center;
     height: 150px;
     background-color: #121212;
-    border-bottom: 4px solid #d4af37; /* Ligne dorée */
+    border-bottom: 4px solid #d4af37;
     box-shadow: 0 5px 15px rgba(0,0,0,0.5);
-    position: relative; /* permet de centrer le texte indépendamment */
+    position: relative;
+    z-index: 20; /* IMPORTANT */
     padding: 0 30px;
 }
 
 .logo img {
-    height: 160px;   /* ajuste la taille */
+    height: 160px;
 }
 
 .bandeau {
-    position: absolute; /* détache du flux flex */
+    position: absolute;
     left: 50%;
-    transform: translateX(-50%); /* centre horizontalement */
+    transform: translateX(-50%);
     color: #d4af37;
     font-family: 'Arial Black', sans-serif;
     font-size: 2.5rem;
     text-transform: uppercase;
     letter-spacing: 3px;
 }
-/* Le conteneur principal */
+
+/* ========================= */
+/* USER INFO                 */
+/* ========================= */
+
+.user-info {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 5px;
+    color: gold;
+    font-weight: bold;
+    font-size: 1.1rem;
+    z-index: 30; 
+}
+
+.username {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #ffd700;
+    text-shadow: 0 0 6px rgba(255, 215, 0, 0.7);
+}
+
+.balance {
+    background: rgba(0, 0, 0, 0.4);
+    padding: 6px 12px;
+    border: 1px solid #d4af37;
+    border-radius: 8px;
+    color: #ffd700;
+    font-weight: bold;
+    text-shadow: 0 0 5px #d4af37;
+    box-shadow: 0 0 10px rgba(212, 175, 55, 0.4);
+}
+
+/* ========================= */
+/* CARTES DE JEUX            */
+/* ========================= */
+
 .games-container {
-    display: flex !important;
-    flex-direction: row;      /* Force l'alignement horizontal */
-    justify-content: center;  /* Centre les deux blocs horizontalement */
-    align-items: flex-start;  /* Aligne le haut des images */
-    gap: 40px;                /* Espace entre les deux jeux */
-    width: 100%;              /* Prend toute la largeur de l'écran */
-    padding: 50px 0;          /* Espace en haut et en bas */
-    flex-wrap: nowrap;        /* Empêche le retour à la ligne forcé */
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 40px;
+    width: 100%;
+    padding: 50px 0;
+    flex-wrap: nowrap;
+    position: relative;
+    z-index: 10; 
 }
 
-/* Si vous avez mis des balises <a> autour de vos cartes */
 .game-link {
-    text-decoration: none;    /* Enlève le soulignement du lien */
-    display: block;           /* Permet au lien de se comporter comme un bloc */
+    text-decoration: none;
+    display: block;
+    position: relative;
+    z-index: 11; 
 }
 
-/* Les cartes de jeu */
 .game-card {
     text-align: center;
-    width: 400px;             /* Largeur fixe pour chaque jeu */
-    flex-shrink: 0;           /* Empêche les cartes de s'écraser */
+    width: 400px;
+    flex-shrink: 0;
 }
 
 .game-image {
-    width: 100%;              /* L'image prend toute la largeur de la card */
-    height: auto;
+    width: 100%;
     border-radius: 15px;
     border: 3px solid #d4af37;
     transition: transform 0.3s ease;
@@ -139,81 +168,20 @@ footer{
     font-size: 1.2rem;
     margin-top: 15px;
 }
-/* Enlève le style par défaut du lien */
-.game-link {
-    text-decoration: none;
-    display: block;
-    transition: all 0.3s ease;
-}
 
-/* Effet quand on passe la souris sur la carte */
+/* Hover */
 .game-link:hover .game-image {
-    transform: scale(1.05); /* L'image grandit légèrement */
-    border-color: #ffffff;  /* La bordure devient blanche ou plus brillante */
-    box-shadow: 0 0 20px rgba(212, 175, 55, 0.8); /* Lueur dorée */
-    filter: brightness(1.2); /* L'image devient plus lumineuse */
+    transform: scale(1.05);
+    border-color: #ffffff;
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.8);
+    filter: brightness(1.2);
 }
 
 .game-link:hover p {
-    color: #ffffff; /* Le texte change de couleur au survol */
+    color: #ffffff;
     text-shadow: 0 0 10px #d4af37;
 }
 
-/* Optionnel : Effet de clic (quand on appuie) */
 .game-link:active {
     transform: scale(0.98);
-}
-
-.user-info {
-  position: absolute;
-  top: 20px;
-  right: 30px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 5px;
-  color: gold;
-  font-weight: bold;
-  font-size: 1.1rem;
-  z-index: 2;
-}
-
-
-.user-info .username {
-    display: block;
-    font-weight: bold;
-    color: #ffd700;
-}
-
-.user-info .balance {
-    color: #ffffff;
-}
-
-.username {
-  font-size: 1.2rem;
-  font-weight: bold;
-  color: #ffd700;
-  text-shadow: 0 0 6px rgba(255, 215, 0, 0.7);
-  letter-spacing: 1px;
-}
-
-.balance {
-  background: rgba(0, 0, 0, 0.4);
-  padding: 6px 12px;
-  border: 1px solid #d4af37;
-  border-radius: 8px;
-  color: #ffd700;
-  font-weight: bold;
-  text-shadow: 0 0 5px #d4af37;
-  box-shadow: 0 0 10px rgba(212, 175, 55, 0.4);
-}
-
-@keyframes balanceFlash {
-  0% { text-shadow: 0 0 5px gold; }
-  50% { text-shadow: 0 0 15px gold; }
-  100% { text-shadow: 0 0 5px gold; }
-}
-
-.balance.updated {
-  animation: balanceFlash 0.6s ease-out;
 }

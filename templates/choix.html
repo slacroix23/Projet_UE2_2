@@ -1,37 +1,50 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Choix du jeu</title>
-    <link rel="stylesheet" href="../static/choix.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='choix.css') }}">
 </head>
 
 <body>
+       <!-- CANVAS PARTICULES -->
+    <canvas id="particles"></canvas>
+
     <header class="casino-header">
         <div class="logo">
             <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" />
         </div>
+
         <div class="bandeau">Choisissez votre Jeu !!</div>
+
         <div class="user-info">
             <span class="username">{{ session.username }}</span>
             <span class="balance">Balance : <span id="balance-value">{{ balance }}</span> €</span>
         </div>
     </header>
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='choix.css') }}">
+    <!-- CONTENEUR DES JEUX -->
+    <div class="games-container">
 
-    <div class="game-card">
-        <img src="{{ url_for('static', filename='blackjack.png') }}" class="game-image">
-        <p>Maîtrisez l'art du 21</p>
+        <a href="{{ url_for('blackjack') }}" class="game-link">
+            <div class="game-card">
+                <img src="{{ url_for('static', filename='blackjack.png') }}" class="game-image">
+                <p>Maîtrisez l'art du 21</p>
+            </div>
+        </a>
+
+        <a href="{{ url_for('roulette') }}" class="game-link">
+            <div class="game-card">
+                <img src="{{ url_for('static', filename='roulette.png') }}" class="game-image">
+                <p>Faites vos jeux, rien ne va plus !</p>
+            </div>
+        </a>
+
     </div>
 
-    <div class="game-card">
-        <img src="{{ url_for('static', filename='roulette.png') }}" class="game-image">
-        <p>Faites vos jeux, rien ne va plus !</p>
-    </div>
-    </main>
+    <!-- SCRIPT PARTICULES -->
     <script>
         window.addEventListener("DOMContentLoaded", () => {
             const canvas = document.getElementById("particles");
@@ -77,6 +90,8 @@
             animate();
         });
     </script>
+
+    <!-- SCRIPT BALANCE -->
     <script>
         async function autoUpdateBalance() {
             try {
@@ -88,14 +103,10 @@
 
                 const oldValue = span.textContent;
 
-                // Si la balance change → animation
                 if (oldValue !== String(data.balance)) {
                     span.textContent = data.balance;
-
-                    // Ajoute la classe d’animation
                     span.parentElement.classList.add("updated");
 
-                    // La retire après l’animation
                     setTimeout(() => {
                         span.parentElement.classList.remove("updated");
                     }, 600);
@@ -106,14 +117,9 @@
             }
         }
 
-        // Mise à jour au chargement
         document.addEventListener("DOMContentLoaded", autoUpdateBalance);
-
-        // Mise à jour automatique toutes les 2 secondes
         setInterval(autoUpdateBalance, 2000);
     </script>
 
-    <canvas id="particles"></canvas>
 </body>
-
 </html>
