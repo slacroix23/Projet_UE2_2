@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>TEST CHAT</title>
+    <script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
+</head>
+<body>
+    <header>
+        <div class="user-info">
+            <span class="username">{{ session.username }}</span>
+            <span class="balance">Balance : <span id="balance-value">{{ balance }}</span> €</span>
+        </div>
+    </header>
+
+    <div id="chat-container" style="margin-top: 20px;">
+        <div id="messages" style="border: 1px solid #ccc; height: 300px; overflow-y: scroll; background: #eee; padding: 10px;"></div>
+        <input type="text" id="message-input" placeholder="Message secret...">
+        <button id="send-btn">Envoyer</button>
+    </div>
+
+    <script>
+        // On attend que le DOM soit chargé pour éviter l'erreur "lexical declaration"
+        document.addEventListener("DOMContentLoaded", () => {
+            const socket = io();
+            const messageContainer = document.getElementById('messages');
+            const input = document.getElementById('message-input');
+            const btn = document.getElementById('send-btn');
+
+            socket.on('connect', () => {
+                console.log("Connecté ! ID:", socket.id);
+            });
+
+            socket.on('new_message', (data) => {
+                const msgDiv = document.createElement('div');
+                msgDiv.innerHTML = `<strong>${data.user}:</strong> ${data.payload}`;
+                messageContainer.appendChild(msgDiv);
+                messageContainer.scrollTop = messageContainer.scrollHeight;
+            });
+
+            // On utilise un eventListener plutôt qu'un onclick dans le HTML
+            // C'est beaucoup plus propre et évite les erreurs d'initialisation
+            btn.addEventListener('click', () => {
+                const texte = input.value;
+                if (texte.trim() !== "") {
+                    socket.emit('send_message', { payload: texte });
+                    input.value = "";
+                }
+            });
+
+            input.addEventListener("keypress", (e) => {
+                if (e.key === "Enter") btn.click();
+            });
+        });
+    </script>
+</body>
+</html>
