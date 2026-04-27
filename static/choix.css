@@ -1,17 +1,17 @@
-/* ========================= */
-/* FOND VELOURS ROUGE        */
-/* ========================= */
+/* =========================================================
+   🎰 FOND VELOURS ROUGE — VERSION HARMONISÉE VEGAS NÉON
+========================================================= */
 
 body {
     margin: 0;
     position: relative;
     background: radial-gradient(circle at center,
-        #6b0000 0%,
-        #4a0000 30%,
-        #240000 65%,
+        #7a0000 0%,
+        #4a0000 35%,
+        #1a0000 70%,
         #000000 100%
     );
-    animation: pulseBg 10s ease-in-out infinite;
+    animation: pulseBg 12s ease-in-out infinite;
     overflow-x: hidden;
     z-index: 0;
 }
@@ -22,7 +22,7 @@ body {
     100% { background-size: 100%; }
 }
 
-/* Fumée rouge */
+/* Fumée rouge harmonisée */
 body::after {
     content: "";
     position: fixed;
@@ -31,68 +31,73 @@ body::after {
     width: 140%;
     height: 140%;
     pointer-events: none;
-    background: radial-gradient(circle, rgba(255, 0, 0, 0.18) 0%, rgba(0, 0, 0, 0) 60%);
+    background: radial-gradient(circle,
+        rgba(255, 0, 0, 0.18) 0%,
+        rgba(0, 0, 0, 0) 60%
+    );
     filter: blur(120px);
-    opacity: 0.55;
+    opacity: 0.50;
     animation: smokeMove 18s ease-in-out infinite;
     z-index: -2;
 }
 
 @keyframes smokeMove {
     0% { transform: translate(0,0) scale(1); }
-    50% { transform: translate(10%,10%) scale(1.25); }
+    50% { transform: translate(8%,8%) scale(1.22); }
     100% { transform: translate(0,0) scale(1); }
 }
 
-/* ========================= */
-/* CANVAS PARTICULES         */
-/* ========================= */
+/* =========================================================
+   ✨ PARTICULES DORÉES
+========================================================= */
 
 #particles {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    inset: 0;
     pointer-events: none;
     z-index: -3;
 }
 
-/* ========================= */
-/* HEADER CASINO             */
-/* ========================= */
+/* =========================================================
+   🏛️ HEADER — ENSEIGNE VEGAS NÉON
+========================================================= */
 
 .casino-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     height: 150px;
-    background-color: #121212;
+    background: linear-gradient(180deg, #0a0a0a, #1a0000);
     border-bottom: 4px solid #d4af37;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+    box-shadow: 0 0 18px rgba(212,175,55,0.35);
     position: relative;
-    z-index: 20; /* IMPORTANT */
     padding: 0 30px;
+    z-index: 20;
 }
 
 .logo img {
-    height: 160px;
+    height: 150px;
 }
 
+/* Harmonisation avec blackjack */
 .bandeau {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
-    color: #d4af37;
-    font-family: 'Arial Black', sans-serif;
-    font-size: 2.5rem;
+    color: #ffcc33;
+    font-family: 'Cinzel', serif;
+    font-size: 2.8rem;
     text-transform: uppercase;
-    letter-spacing: 3px;
+    letter-spacing: 4px;
+    text-shadow:
+        0 0 6px #ffcc33,
+        0 0 14px rgba(255,0,0,0.35),
+        0 0 22px rgba(255,0,0,0.2);
 }
 
-/* ========================= */
-/* USER INFO                 */
-/* ========================= */
+/* =========================================================
+   👤 USER INFO — BADGE PREMIUM
+========================================================= */
 
 .user-info {
     position: absolute;
@@ -102,86 +107,101 @@ body::after {
     flex-direction: column;
     align-items: flex-end;
     gap: 5px;
-    color: gold;
     font-weight: bold;
     font-size: 1.1rem;
-    z-index: 30; 
+    z-index: 30;
 }
 
 .username {
-    font-size: 1.2rem;
-    font-weight: bold;
-    color: #ffd700;
-    text-shadow: 0 0 6px rgba(255, 215, 0, 0.7);
+    font-size: 1.25rem;
+    color: #ffcc33;
+    text-shadow: 0 0 6px rgba(255,215,0,0.7);
 }
 
 .balance {
-    background: rgba(0, 0, 0, 0.4);
+    background: rgba(0,0,0,0.45);
     padding: 6px 12px;
     border: 1px solid #d4af37;
     border-radius: 8px;
-    color: #ffd700;
+    color: #ffcc33;
     font-weight: bold;
     text-shadow: 0 0 5px #d4af37;
-    box-shadow: 0 0 10px rgba(212, 175, 55, 0.4);
+    box-shadow: 0 0 10px rgba(212,175,55,0.4);
 }
 
-/* ========================= */
-/* CARTES DE JEUX            */
-/* ========================= */
+/* =========================================================
+   🎮 CARTES DE SÉLECTION DES JEUX — VERSION VEGAS NÉON
+========================================================= */
 
 .games-container {
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    gap: 40px;
+    gap: 60px;
     width: 100%;
-    padding: 50px 0;
+    padding: 60px 0;
     flex-wrap: nowrap;
     position: relative;
-    z-index: 10; 
+    z-index: 10;
 }
 
 .game-link {
     text-decoration: none;
     display: block;
     position: relative;
-    z-index: 11; 
+    z-index: 11;
+    transition: transform 0.2s ease;
 }
 
 .game-card {
     text-align: center;
-    width: 400px;
+    width: 380px;
     flex-shrink: 0;
 }
 
+/* Image harmonisée avec style Vegas */
 .game-image {
     width: 100%;
-    border-radius: 15px;
+    border-radius: 18px;
     border: 3px solid #d4af37;
-    transition: transform 0.3s ease;
+    box-shadow:
+        0 0 12px rgba(212,175,55,0.35),
+        0 6px 14px rgba(0,0,0,0.5);
+    transition: 0.3s ease;
 }
 
+/* Texte sous les cartes */
 .game-card p {
-    color: #d4af37;
+    color: #ffcc33;
+    font-family: 'Cinzel', serif;
     font-weight: bold;
-    font-size: 1.2rem;
-    margin-top: 15px;
+    font-size: 1.4rem;
+    margin-top: 18px;
+    text-shadow: 0 0 6px rgba(255,215,0,0.5);
 }
 
-/* Hover */
+/* Hover Vegas Néon */
+.game-link:hover {
+    transform: translateY(-6px);
+}
+
 .game-link:hover .game-image {
-    transform: scale(1.05);
+    transform: scale(1.06);
     border-color: #ffffff;
-    box-shadow: 0 0 20px rgba(212, 175, 55, 0.8);
-    filter: brightness(1.2);
+    box-shadow:
+        0 0 22px rgba(255,215,0,0.9),
+        0 0 40px rgba(255,0,0,0.4);
+    filter: brightness(1.18);
 }
 
 .game-link:hover p {
     color: #ffffff;
-    text-shadow: 0 0 10px #d4af37;
+    text-shadow:
+        0 0 10px #ffcc33,
+        0 0 20px rgba(255,0,0,0.4);
 }
 
+/* Click feedback */
 .game-link:active {
-    transform: scale(0.98);
+    transform: scale(0.97);
 }
