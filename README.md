@@ -17,3 +17,4 @@ cloner le repo et dans le terminal utilisez la commande "docker compose up"
 
 ## Sécurité du site :
 Vos données seront bien sécurisées avec nous, les pages de jeux sont protégées par une authentification et un hashage des données sensibles.
+ test
