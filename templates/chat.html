@@ -2,44 +2,66 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>TEST CHAT</title>
+    <title>Chat – Trust The Roll</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='chat.css') }}">
     <script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
 </head>
+
 <body>
-    <header>
+
+    <!-- ---------------------------------------------------------
+         🏛️ HEADER VEGAS NÉON
+    --------------------------------------------------------- -->
+    <header class="casino-header">
+        <div class="logo">
+            <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" />
+        </div>
+
+        <div class="bandeau">Chat Secret</div>
+
         <div class="user-info">
             <span class="username">{{ session.username }}</span>
-            <span class="balance">Balance : <span id="balance-value">{{ balance }}</span> €</span>
+            <span class="balance">Balance :
+                <span id="balance-value">{{ balance }}</span> €
+            </span>
         </div>
     </header>
 
-    <div id="chat-container" style="margin-top: 20px;">
-        <div id="messages" style="border: 1px solid #ccc; height: 300px; overflow-y: scroll; background: #eee; padding: 10px;"></div>
-        <input type="text" id="message-input" placeholder="Message secret...">
-        <button id="send-btn">Envoyer</button>
+    <!-- ---------------------------------------------------------
+         💬 CHAT
+    --------------------------------------------------------- -->
+    <div id="chat-container">
+        <div id="messages"></div>
+
+        <div id="input-zone">
+            <input type="text" id="message-input" placeholder="Message secret...">
+            <button id="send-btn">Envoyer</button>
+        </div>
     </div>
 
+    <!-- ---------------------------------------------------------
+         ✨ PARTICULES
+    --------------------------------------------------------- -->
+    <canvas id="particles"></canvas>
+
+    <!-- ---------------------------------------------------------
+         🔌 SOCKET.IO
+    --------------------------------------------------------- -->
     <script>
-        // On attend que le DOM soit chargé pour éviter l'erreur "lexical declaration"
         document.addEventListener("DOMContentLoaded", () => {
             const socket = io();
             const messageContainer = document.getElementById('messages');
             const input = document.getElementById('message-input');
             const btn = document.getElementById('send-btn');
 
-            socket.on('connect', () => {
-                console.log("Connecté ! ID:", socket.id);
-            });
-
             socket.on('new_message', (data) => {
                 const msgDiv = document.createElement('div');
+                msgDiv.classList.add("msg");
                 msgDiv.innerHTML = `<strong>${data.user}:</strong> ${data.payload}`;
                 messageContainer.appendChild(msgDiv);
                 messageContainer.scrollTop = messageContainer.scrollHeight;
             });
 
-            // On utilise un eventListener plutôt qu'un onclick dans le HTML
-            // C'est beaucoup plus propre et évite les erreurs d'initialisation
             btn.addEventListener('click', () => {
                 const texte = input.value;
                 if (texte.trim() !== "") {
@@ -53,5 +75,54 @@
             });
         });
     </script>
+
+    <!-- ---------------------------------------------------------
+         ✨ SCRIPT PARTICULES
+    --------------------------------------------------------- -->
+    <script>
+        window.addEventListener("DOMContentLoaded", () => {
+            const canvas = document.getElementById("particles");
+            const ctx = canvas.getContext("2d");
+
+            function resize() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            resize();
+            window.addEventListener("resize", resize);
+
+            const particles = [];
+            for (let i = 0; i < 80; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    size: Math.random() * 2 + 1,
+                    speed: Math.random() * 0.3 + 0.1,
+                    alpha: Math.random() * 0.5 + 0.3
+                });
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                particles.forEach(p => {
+                    ctx.fillStyle = `rgba(255, 215, 100, ${p.alpha})`;
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    p.y -= p.speed;
+                    if (p.y < -5) {
+                        p.y = canvas.height + 5;
+                        p.x = Math.random() * canvas.width;
+                    }
+                });
+
+                requestAnimationFrame(animate);
+            }
+            animate();
+        });
+    </script>
+
 </body>
 </html>

@@ -134,32 +134,67 @@ footer{
     width: fit-content;
 }
 
+/* ---------------------------------------------------------
+   🏛️ HEADER — ENSEIGNE VEGAS NÉON
+--------------------------------------------------------- */
 .casino-header {
     display: flex;
-    justify-content: space-between; /* logo à gauche, texte centré */
+    justify-content: space-between;
     align-items: center;
-    height: 150px;
-    background-color: #121212;
-    border-bottom: 4px solid #d4af37; /* Ligne dorée */
-    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
-    position: relative; /* permet de centrer le texte indépendamment */
+    height: 140px;
+    background: linear-gradient(180deg, #0a0a0a, #1a0000);
+    border-bottom: 2px solid #d4af37;
+    box-shadow: 0 0 14px rgba(212,175,55,0.25);
     padding: 0 30px;
+    position: relative;
 }
 
 .logo img {
-    height: 160px;   /* ajuste la taille */
+    height: 90px;
 }
 
 .bandeau {
-    position: absolute; /* détache du flux flex */
+    position: absolute;
     left: 50%;
-    transform: translateX(-50%); /* centre horizontalement */
-    color: #d4af37;
-    font-family: 'Arial Black', sans-serif;
-    font-size: 2.5rem;
+    transform: translateX(-50%);
+    font-family: 'Cinzel', serif;
+    font-size: 2.7rem;
     text-transform: uppercase;
     letter-spacing: 3px;
+    color: #ffcc33;
+    text-shadow:
+        0 0 6px #ffcc33,
+        0 0 14px rgba(255,0,0,0.35),
+        0 0 22px rgba(255,0,0,0.2);
 }
+
+/* ---------------------------------------------------------
+   👤 USER INFO
+--------------------------------------------------------- */
+.user-info {
+    position: absolute;
+    top: 15px;
+    right: 30px;
+    text-align: right;
+}
+
+.username {
+    color: #ffcc33;
+    font-weight: bold;
+    font-size: 1.15rem;
+    text-shadow: 0 0 4px rgba(255,215,0,0.5);
+}
+
+.balance {
+    background: rgba(0,0,0,0.55);
+    padding: 6px 12px;
+    border: 1px solid #d4af37;
+    border-radius: 8px;
+    color: #ffcc33;
+    font-weight: bold;
+    text-shadow: 0 0 4px rgba(255,215,0,0.5);
+}
+
 
 /* --- Boutons Log in / Register --- */
 .login-buttons {
@@ -435,34 +470,7 @@ footer{
 }
 
 
-.user-info .username {
-    display: block;
-    font-weight: bold;
-    color: #ffd700;
-}
 
-.user-info .balance {
-    color: #ffffff;
-}
-
-.username {
-  font-size: 1.2rem;
-  font-weight: bold;
-  color: #ffd700;
-  text-shadow: 0 0 6px rgba(255, 215, 0, 0.7);
-  letter-spacing: 1px;
-}
-
-.balance {
-  background: rgba(0, 0, 0, 0.4);
-  padding: 6px 12px;
-  border: 1px solid #d4af37;
-  border-radius: 8px;
-  color: #ffd700;
-  font-weight: bold;
-  text-shadow: 0 0 5px #d4af37;
-  box-shadow: 0 0 10px rgba(212, 175, 55, 0.4);
-}
 
 @keyframes balanceFlash {
   0% { text-shadow: 0 0 5px gold; }

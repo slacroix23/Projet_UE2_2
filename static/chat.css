@@ -1,0 +1,151 @@
+/* ---------------------------------------------------------
+   🎰 FOND VELOURS ROUGE + PARTICULES
+--------------------------------------------------------- */
+body {
+    margin: 0;
+    background: radial-gradient(circle at center,
+        #6b0000 0%,
+        #4a0000 30%,
+        #240000 65%,
+        #000000 100%
+    );
+    font-family: 'Segoe UI', sans-serif;
+    color: #f5e7b8;
+    overflow-x: hidden;
+}
+
+#particles {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -1;
+}
+
+/* ---------------------------------------------------------
+   🏛️ HEADER — ENSEIGNE VEGAS NÉON
+--------------------------------------------------------- */
+.casino-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 110px;
+    background: linear-gradient(180deg, #0a0a0a, #1a0000);
+    border-bottom: 2px solid #d4af37;
+    box-shadow: 0 0 14px rgba(212,175,55,0.25);
+    padding: 0 30px;
+    position: relative;
+}
+
+.logo img {
+    height: 90px;
+}
+
+.bandeau {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Cinzel', serif;
+    font-size: 2.7rem;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: #ffcc33;
+    text-shadow:
+        0 0 6px #ffcc33,
+        0 0 14px rgba(255,0,0,0.35),
+        0 0 22px rgba(255,0,0,0.2);
+}
+
+/* ---------------------------------------------------------
+   👤 USER INFO
+--------------------------------------------------------- */
+.user-info {
+    position: absolute;
+    top: 15px;
+    right: 30px;
+    text-align: right;
+}
+
+.username {
+    color: #ffcc33;
+    font-weight: bold;
+    font-size: 1.15rem;
+    text-shadow: 0 0 4px rgba(255,215,0,0.5);
+}
+
+.balance {
+    background: rgba(0,0,0,0.55);
+    padding: 6px 12px;
+    border: 1px solid #d4af37;
+    border-radius: 8px;
+    color: #ffcc33;
+    font-weight: bold;
+    text-shadow: 0 0 4px rgba(255,215,0,0.5);
+}
+
+/* ---------------------------------------------------------
+   💬 CHAT BOX
+--------------------------------------------------------- */
+#chat-container {
+    width: 70%;
+    margin: 40px auto;
+    background: rgba(0,0,0,0.45);
+    border: 2px solid #d4af37;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 0 18px rgba(212,175,55,0.25);
+}
+
+#messages {
+    height: 300px;
+    overflow-y: auto;
+    background: rgba(0,0,0,0.35);
+    border: 1px solid #d4af37;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: inset 0 0 12px rgba(0,0,0,0.4);
+}
+
+.msg {
+    margin-bottom: 10px;
+    padding: 6px 10px;
+    background: rgba(255,255,255,0.05);
+    border-left: 3px solid #d4af37;
+    border-radius: 4px;
+}
+
+/* ---------------------------------------------------------
+   ✏️ INPUT + BOUTON
+--------------------------------------------------------- */
+#input-zone {
+    display: flex;
+    margin-top: 15px;
+    gap: 10px;
+}
+
+#message-input {
+    flex: 1;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #d4af37;
+    background: rgba(0,0,0,0.4);
+    color: #ffcc33;
+}
+
+#send-btn {
+    background: linear-gradient(45deg, #d4af37, #ffcc00);
+    color: #121212;
+    font-weight: bold;
+    padding: 10px 20px;
+    border: 2px solid #d4af37;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+#send-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 15px #ffd700;
+}
