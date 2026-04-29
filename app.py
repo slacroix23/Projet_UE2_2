@@ -203,13 +203,12 @@ def resolve_blackjack_game(game, username, player_busted=False):
 def home():
     return render_template("index.html")
 
-@app.route('/test')
-def page_test():
-    print(" >>> JE SERS LA PAGE TEST ACTUELLEMENT <<< ") # Regarde ton terminal !
+@app.route('/chat')
+def page_chat():
     username = session.get('username', 'Invité')
     user = read_db_log_in(username)
     balance = user['balance'] if user else 0
-    return render_template('test.html', balance=balance)
+    return render_template('chat.html', balance=balance)
 
 @app.route("/login", methods=["POST"])
 def login():
