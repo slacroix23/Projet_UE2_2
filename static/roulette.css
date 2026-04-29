@@ -289,3 +289,39 @@ footer {
         0 0 22px rgba(255,80,80,0.6),
         0 0 38px rgba(255,0,0,0.4);
 }
+
+/* ===== PATCH ANTI-TROUS / ANTI-SCROLL ===== */
+
+/* Le body doit toujours couvrir l'écran */
+html, body {
+    height: 100%;
+    min-height: 100vh;
+}
+
+/* Empêche les marges de créer du vide */
+#game-container,
+.roulette-container {
+    margin-top: 30px !important;
+    margin-bottom: 30px !important;
+}
+
+/* Le footer ne doit pas pousser la page */
+footer {
+    margin-top: 20px !important;
+    margin-bottom: 0 !important;
+}
+
+/* Empêche tout débordement vertical invisible */
+body > * {
+    max-height: fit-content;
+}
+
+/* Supprime tout espace fantôme créé par flex ou block */
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+main, #game-container, .roulette-container {
+    flex-grow: 1;
+}

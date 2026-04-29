@@ -313,26 +313,3 @@ footer {
         0 0 38px rgba(255,0,0,0.4);
 }
 
-/* ---------------------------------------------------------
-   ✅ PATCH ANTI‑SCROLL (aucun changement visuel)
---------------------------------------------------------- */
-
-html, body {
-    height: 100%;
-}
-
-#game-container {
-    margin: 30px auto !important;
-}
-
-.table {
-    margin-bottom: 20px !important;
-}
-
-footer {
-    margin-top: 20px !important;
-}
-
-body > * {
-    max-height: fit-content;
-}

@@ -35,7 +35,7 @@ SECURE_GEN = random.SystemRandom()
 # --- SÉCURITÉ & HEADERS ---
 @app.after_request
 def apply_security_headers(response):
-    gitresponse.headers["X-Frame-Options"] = "DENY"
+    response.headers["X-Frame-Options"] = "DENY"
     response.headers["X-Content-Type-Options"] = "nosniff"
     response.headers["Content-Security-Policy"] = (
         "default-src 'self'; "
